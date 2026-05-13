@@ -24,17 +24,10 @@ export function AccountColumn({ account, emails, selectedId, onSelect }: Props):
       </header>
       <div className="flex-1 min-h-0 overflow-auto p-2 space-y-2">
         {emails.length === 0 && (
-          <div className="text-center text-[11px] text-text-muted py-8">
-            inbox zero
-          </div>
+          <div className="text-center text-[11px] text-text-muted py-8">inbox zero</div>
         )}
         {emails.map((e) => (
-          <EmailCard
-            key={e.id}
-            email={e}
-            onSelect={onSelect}
-            active={selectedId === e.id}
-          />
+          <EmailCard key={e.id} email={e} onSelect={onSelect} active={selectedId === e.id} />
         ))}
       </div>
     </section>

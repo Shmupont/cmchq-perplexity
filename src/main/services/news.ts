@@ -27,10 +27,7 @@ const FEEDS: FeedSpec[] = [
 
 const ITEM_RE = /<item[\s\S]*?<\/item>/gi
 const TAG = (tag: string): RegExp =>
-  new RegExp(
-    `<${tag}\\b[^>]*>(?:<!\\[CDATA\\[([\\s\\S]*?)\\]\\]>|([\\s\\S]*?))<\\/${tag}>`,
-    'i'
-  )
+  new RegExp(`<${tag}\\b[^>]*>(?:<!\\[CDATA\\[([\\s\\S]*?)\\]\\]>|([\\s\\S]*?))<\\/${tag}>`, 'i')
 
 function extractTag(block: string, tag: string): string | null {
   const m = block.match(TAG(tag))
@@ -175,8 +172,7 @@ export async function summarize(id: string): Promise<string> {
   const client = getAnthropic()
   if (!client) {
     // Fall back to using description if no API key — keeps the UI flow alive.
-    const fallback =
-      item.description ?? `${item.title} (set ANTHROPIC_API_KEY for AI briefings.)`
+    const fallback = item.description ?? `${item.title} (set ANTHROPIC_API_KEY for AI briefings.)`
     persistSummary(id, fallback)
     return fallback
   }

@@ -51,9 +51,7 @@ export function WsjTile(): React.JSX.Element {
         {loading && !latest && (
           <span className="text-[11px] text-text-muted animate-pulse">loading feed…</span>
         )}
-        {!loading && !latest && (
-          <span className="text-[11px] text-text-muted">no stories yet</span>
-        )}
+        {!loading && !latest && <span className="text-[11px] text-text-muted">no stories yet</span>}
         {latest && (
           <>
             <div className="text-xs text-text-primary leading-snug line-clamp-3">
@@ -65,9 +63,7 @@ export function WsjTile(): React.JSX.Element {
           </>
         )}
       </div>
-      <div className="text-[10px] lowercase text-text-muted">
-        markets · 30s voice brief
-      </div>
+      <div className="text-[10px] lowercase text-text-muted">markets · 30s voice brief</div>
     </div>
   )
 }

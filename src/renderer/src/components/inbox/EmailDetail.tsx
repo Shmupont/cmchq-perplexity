@@ -123,9 +123,7 @@ export function EmailDetail({ email, onMarkedRead }: Props): React.JSX.Element {
           </pre>
         )}
         {!loading && !error && !body?.body_html && !body?.body_text && (
-          <div className="p-5 text-sm text-text-muted">
-            {email.snippet ?? 'No body available.'}
-          </div>
+          <div className="p-5 text-sm text-text-muted">{email.snippet ?? 'No body available.'}</div>
         )}
       </div>
     </div>

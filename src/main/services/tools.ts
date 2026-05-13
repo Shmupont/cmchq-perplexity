@@ -31,9 +31,7 @@ type BrainSearchInput = { query: string; limit?: number }
 
 // ---- Tool result shapes ----
 
-export type ToolResult =
-  | { ok: true; data: unknown }
-  | { ok: false; error: string }
+export type ToolResult = { ok: true; data: unknown } | { ok: false; error: string }
 
 function ok(data: unknown): ToolResult {
   return { ok: true, data }
@@ -114,7 +112,8 @@ export async function runLocalTool(name: LocalToolName, input: unknown): Promise
 export const LOCAL_TOOL_SCHEMAS = {
   get_quote: {
     name: 'get_quote',
-    description: 'Get a real-time price quote for a single ticker (US stocks, ETFs, ^GSPC, BTC-USD, etc.).',
+    description:
+      'Get a real-time price quote for a single ticker (US stocks, ETFs, ^GSPC, BTC-USD, etc.).',
     input_schema: {
       type: 'object',
       properties: {

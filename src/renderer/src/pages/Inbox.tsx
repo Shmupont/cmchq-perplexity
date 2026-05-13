@@ -6,11 +6,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { TriageView } from '@components/inbox/TriageView'
 import { EmailCard } from '@components/inbox/EmailCard'
 import { EmailDetail } from '@components/inbox/EmailDetail'
-import type {
-  EmailRecord,
-  EmailSyncStatus,
-  TriageView as Triage
-} from '../../../shared/types'
+import type { EmailRecord, EmailSyncStatus, TriageView as Triage } from '../../../shared/types'
 
 type Mode = 'triage' | 'all'
 
@@ -25,10 +21,7 @@ export function Inbox(): React.JSX.Element {
   const [syncing, setSyncing] = useState(false)
 
   const refresh = useCallback(async () => {
-    const [s, t] = await Promise.all([
-      window.api.email.status(),
-      window.api.email.triage()
-    ])
+    const [s, t] = await Promise.all([window.api.email.status(), window.api.email.triage()])
     setStatus(s)
     setTriage(t)
   }, [])
@@ -155,20 +148,15 @@ export function Inbox(): React.JSX.Element {
             no accounts connected
           </div>
           <p className="text-sm text-text-secondary mt-3 max-w-md">
-            Open <span className="text-accent-cyan">Settings</span> to connect your Gmail
-            accounts (personal, business, school). Each one needs an OAuth approval — runs
-            in your browser.
+            Open <span className="text-accent-cyan">Settings</span> to connect your Gmail accounts
+            (personal, business, school). Each one needs an OAuth approval — runs in your browser.
           </p>
         </div>
       ) : (
         <div className="flex-1 min-h-0 grid grid-cols-[1fr_440px]">
           <div className="min-h-0 overflow-auto">
             {mode === 'triage' ? (
-              <TriageView
-                data={triage}
-                selectedId={selected?.id ?? null}
-                onSelect={setSelected}
-              />
+              <TriageView data={triage} selectedId={selected?.id ?? null} onSelect={setSelected} />
             ) : (
               <div className="p-3 space-y-2">
                 {all.length === 0 ? (

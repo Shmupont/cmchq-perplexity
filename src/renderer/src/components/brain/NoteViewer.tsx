@@ -41,7 +41,9 @@ export function NoteViewer({ noteId, onOpenLink }: Props): React.JSX.Element {
   if (!noteId) {
     return (
       <div className="flex flex-col items-center justify-center h-full text-center px-6">
-        <div className="text-[10px] uppercase tracking-widest text-text-muted">No note selected</div>
+        <div className="text-[10px] uppercase tracking-widest text-text-muted">
+          No note selected
+        </div>
         <div className="text-sm text-text-secondary mt-2">
           Click a node in the graph, or search above.
         </div>
@@ -50,9 +52,7 @@ export function NoteViewer({ noteId, onOpenLink }: Props): React.JSX.Element {
   }
 
   if (loading) {
-    return (
-      <div className="p-5 text-xs text-text-muted animate-pulse">Loading note…</div>
-    )
+    return <div className="p-5 text-xs text-text-muted animate-pulse">Loading note…</div>
   }
 
   if (error || !note) {
@@ -69,9 +69,7 @@ export function NoteViewer({ noteId, onOpenLink }: Props): React.JSX.Element {
           {note.id} · modified {modified.toLocaleDateString()}{' '}
           {modified.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
         </div>
-        {note.area && (
-          <div className="text-[11px] text-accent-cyan mt-1">area: {note.area}</div>
-        )}
+        {note.area && <div className="text-[11px] text-accent-cyan mt-1">area: {note.area}</div>}
       </header>
       <div className="flex-1 overflow-auto px-5 py-4 prose-brain text-sm text-text-primary leading-relaxed">
         <ReactMarkdown
@@ -112,7 +110,9 @@ export function NoteViewer({ noteId, onOpenLink }: Props): React.JSX.Element {
               </code>
             ),
             ul: ({ children }) => <ul className="list-disc ml-6 my-2 space-y-0.5">{children}</ul>,
-            ol: ({ children }) => <ol className="list-decimal ml-6 my-2 space-y-0.5">{children}</ol>,
+            ol: ({ children }) => (
+              <ol className="list-decimal ml-6 my-2 space-y-0.5">{children}</ol>
+            ),
             blockquote: ({ children }) => (
               <blockquote className="border-l-2 border-accent-cyan/40 pl-3 my-2 text-text-secondary">
                 {children}

@@ -3,11 +3,7 @@
 // Requires GMAIL_CLIENT_ID/SECRET to be set in .env first.
 
 import { useEffect, useState } from 'react'
-import type {
-  EmailAccount,
-  EmailAccountLabel,
-  EmailSyncStatus
-} from '../../../../shared/types'
+import type { EmailAccount, EmailAccountLabel, EmailSyncStatus } from '../../../../shared/types'
 
 const LABELS: EmailAccountLabel[] = ['personal', 'business', 'school']
 
@@ -47,7 +43,8 @@ export function InboxSettings(): React.JSX.Element {
   }
 
   async function remove(account: EmailAccount): Promise<void> {
-    if (!confirm(`Disconnect ${account.email}? Local emails for this account will be deleted.`)) return
+    if (!confirm(`Disconnect ${account.email}? Local emails for this account will be deleted.`))
+      return
     try {
       await window.api.email.removeAccount(account.id)
       await load()
@@ -83,9 +80,7 @@ export function InboxSettings(): React.JSX.Element {
     <section className="card-elevated p-5 mb-6">
       <div className="flex items-baseline justify-between mb-3">
         <div className="text-[10px] uppercase tracking-widest text-text-muted">Inbox</div>
-        <div className="text-[11px] text-text-muted">
-          Gmail × 3 + Haiku triage
-        </div>
+        <div className="text-[11px] text-text-muted">Gmail × 3 + Haiku triage</div>
       </div>
 
       {!status?.hasGmailCreds && (
@@ -168,17 +163,13 @@ export function InboxSettings(): React.JSX.Element {
           disabled={!status?.hasAnthropicKey || (status?.accounts.length ?? 0) === 0}
           className="h-8 px-3 rounded-md border border-border text-[11px] uppercase tracking-wider hover:border-accent-cyan hover:text-accent-cyan disabled:opacity-40 transition-colors"
           title={
-            status?.hasAnthropicKey
-              ? 'Re-rank every email with Haiku'
-              : 'ANTHROPIC_API_KEY not set'
+            status?.hasAnthropicKey ? 'Re-rank every email with Haiku' : 'ANTHROPIC_API_KEY not set'
           }
         >
           Re-triage all
         </button>
         {!status?.hasAnthropicKey && (
-          <span className="text-[10px] text-text-muted">
-            · triage requires ANTHROPIC_API_KEY
-          </span>
+          <span className="text-[10px] text-text-muted">· triage requires ANTHROPIC_API_KEY</span>
         )}
       </div>
     </section>

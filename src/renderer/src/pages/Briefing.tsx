@@ -68,15 +68,14 @@ export function Briefing(): React.JSX.Element {
             ))}
           </div>
           <span className="text-xs text-text-secondary">
-            {tab === 'daily'
-              ? 'auto-generated 7:00 AM PT'
-              : 'auto-generated Sundays 8:00 PM PT'}
+            {tab === 'daily' ? 'auto-generated 7:00 AM PT' : 'auto-generated Sundays 8:00 PM PT'}
           </span>
         </header>
 
         {needsKey && (
           <div className="card border border-warning/40 bg-warning/5 p-3 text-xs text-warning">
-            No Anthropic API key set. Go to Settings → API Keys to add one before regenerating briefs.
+            No Anthropic API key set. Go to Settings → API Keys to add one before regenerating
+            briefs.
           </div>
         )}
 
@@ -87,11 +86,7 @@ export function Briefing(): React.JSX.Element {
         )}
 
         <div className="grid grid-cols-[1fr_280px] gap-4 flex-1 min-h-0">
-          <BriefView
-            brief={current}
-            onRegenerate={regenerate}
-            regenerating={regenerating}
-          />
+          <BriefView brief={current} onRegenerate={regenerate} regenerating={regenerating} />
           <BriefArchive
             briefings={archive}
             selectedId={current?.id ?? null}

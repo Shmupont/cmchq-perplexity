@@ -409,7 +409,7 @@ async function triageOne(row: {
 }): Promise<TriageResult | null> {
   const sender = row.from_name
     ? `${row.from_name} <${row.from_address ?? ''}>`
-    : row.from_address ?? 'unknown'
+    : (row.from_address ?? 'unknown')
   const subject = row.subject ?? '(no subject)'
   const snippet = (row.snippet ?? '').slice(0, 600)
   try {
@@ -535,7 +535,9 @@ export function getAllEmails(filters: EmailFilters): EmailRecord[] {
     params.push(filters.starred ? 1 : 0)
   }
   if (filters.search) {
-    where.push('(e.subject LIKE ? OR e.from_name LIKE ? OR e.from_address LIKE ? OR e.snippet LIKE ?)')
+    where.push(
+      '(e.subject LIKE ? OR e.from_name LIKE ? OR e.from_address LIKE ? OR e.snippet LIKE ?)'
+    )
     const q = `%${filters.search}%`
     params.push(q, q, q, q)
   }
@@ -549,10 +551,7 @@ export function getAllEmails(filters: EmailFilters): EmailRecord[] {
   return rows.map(normalizeRow)
 }
 
-export async function getEmailDetail(
-  id: string,
-  accountId: number
-): Promise<EmailDetail | null> {
+export async function getEmailDetail(id: string, accountId: number): Promise<EmailDetail | null> {
   const baseRow = getDb()
     .prepare(`${SELECT_BASE} WHERE e.id = ? AND e.account_id = ?`)
     .get(id, accountId) as EmailJoinRow | undefined
@@ -576,9 +575,10 @@ export async function getEmailDetail(
   }
 }
 
-function extractBody(
-  payload: gmail_v1.Schema$MessagePart | null
-): { html: string | null; text: string | null } {
+function extractBody(payload: gmail_v1.Schema$MessagePart | null): {
+  html: string | null
+  text: string | null
+} {
   if (!payload) return { html: null, text: null }
   let html: string | null = null
   let text: string | null = null

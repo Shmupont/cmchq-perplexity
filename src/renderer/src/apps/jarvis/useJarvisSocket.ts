@@ -40,7 +40,7 @@ function extractText(value: unknown): string | null {
   if (typeof value === 'string') return value
   if (Array.isArray(value)) {
     return value
-      .map((v) => (typeof v === 'string' ? v : extractText(v) ?? ''))
+      .map((v) => (typeof v === 'string' ? v : (extractText(v) ?? '')))
       .filter(Boolean)
       .join('')
   }

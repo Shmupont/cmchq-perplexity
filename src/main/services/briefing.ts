@@ -70,7 +70,9 @@ function formatMacroContext(macro: MacroChip[]): string {
     .map(
       (m) =>
         `  - ${m.label} (${m.ticker}): ${m.price !== null ? m.price.toFixed(2) : 'n/a'} ${
-          m.change_pct !== null ? `(${m.change_pct >= 0 ? '+' : ''}${m.change_pct.toFixed(2)}%)` : ''
+          m.change_pct !== null
+            ? `(${m.change_pct >= 0 ? '+' : ''}${m.change_pct.toFixed(2)}%)`
+            : ''
         }`
     )
     .join('\n')
@@ -189,9 +191,9 @@ function getBriefingById(id: number): Briefing | null {
 export function getLatestBrief(type: BriefType): Briefing | null {
   const db = getDb()
   return (
-    (db
-      .prepare(`SELECT * FROM briefings WHERE type = ? ORDER BY id DESC LIMIT 1`)
-      .get(type) as Briefing | undefined) ?? null
+    (db.prepare(`SELECT * FROM briefings WHERE type = ? ORDER BY id DESC LIMIT 1`).get(type) as
+      | Briefing
+      | undefined) ?? null
   )
 }
 

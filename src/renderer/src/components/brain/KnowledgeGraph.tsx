@@ -171,9 +171,9 @@ export function KnowledgeGraph({
     if (!graphRef.current || !renderData) return
     try {
       graphRef.current.setData(renderData)
-      graphRef.current.render().catch((err) =>
-        console.error('[KnowledgeGraph] restyle render:', err)
-      )
+      graphRef.current
+        .render()
+        .catch((err) => console.error('[KnowledgeGraph] restyle render:', err))
     } catch (err) {
       console.error('[KnowledgeGraph] restyle:', err)
     }

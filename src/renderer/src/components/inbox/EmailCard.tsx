@@ -57,7 +57,9 @@ export function EmailCard({ email, onSelect, active }: Props): React.JSX.Element
             >
               {sender}
             </span>
-            <span className="text-[10px] text-text-muted shrink-0 font-mono">{relTime(email.date)}</span>
+            <span className="text-[10px] text-text-muted shrink-0 font-mono">
+              {relTime(email.date)}
+            </span>
           </div>
           <div className="text-[13px] text-text-primary truncate mt-0.5">
             {email.subject || '(no subject)'}

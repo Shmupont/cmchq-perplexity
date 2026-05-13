@@ -65,8 +65,8 @@ export function ApiKeysSection(): React.JSX.Element {
     <section className="card-elevated p-5 mb-6">
       <div className="text-[10px] uppercase tracking-widest text-text-muted mb-1">API Keys</div>
       <div className="text-xs text-text-secondary mb-4">
-        Stored encrypted via Electron safeStorage in your user data directory. Never written to
-        disk in plain text.
+        Stored encrypted via Electron safeStorage in your user data directory. Never written to disk
+        in plain text.
       </div>
       <div className="flex flex-col gap-3">
         {KEYS.map(({ name, label, hint }) => {

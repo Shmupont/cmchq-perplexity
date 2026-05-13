@@ -7,12 +7,7 @@ import Anthropic from '@anthropic-ai/sdk'
 import { MODELS } from '../constants'
 import { getDb } from './db'
 import { getKey } from './keys'
-import {
-  LOCAL_TOOL_SCHEMAS,
-  isLocalTool,
-  runLocalTool,
-  type LocalToolName
-} from './tools'
+import { LOCAL_TOOL_SCHEMAS, isLocalTool, runLocalTool, type LocalToolName } from './tools'
 import type { AgentId, AgentEvent, Task } from '../../shared/agent-types'
 
 export type { AgentId, AgentEvent, Task }

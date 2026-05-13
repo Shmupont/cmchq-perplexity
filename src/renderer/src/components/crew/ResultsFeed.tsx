@@ -23,10 +23,7 @@ export function ResultsFeed({
           </div>
           <div className="text-[11px] text-text-secondary mt-0.5">{task.description}</div>
         </div>
-        <button
-          onClick={onClose}
-          className="text-[11px] text-text-muted hover:text-text-primary"
-        >
+        <button onClick={onClose} className="text-[11px] text-text-muted hover:text-text-primary">
           ✕
         </button>
       </div>

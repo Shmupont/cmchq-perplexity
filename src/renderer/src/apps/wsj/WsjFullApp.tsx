@@ -41,7 +41,13 @@ export function WsjFullApp(): React.JSX.Element {
     setBrief({ kind: 'briefing', id: item.id })
     try {
       const res = await window.api.news.brief(item.id)
-      setBrief({ kind: 'ready', id: item.id, summary: res.summary, played: res.played, reason: res.reason })
+      setBrief({
+        kind: 'ready',
+        id: item.id,
+        summary: res.summary,
+        played: res.played,
+        reason: res.reason
+      })
     } catch (err) {
       setBrief({
         kind: 'error',
@@ -143,13 +149,16 @@ export function WsjFullApp(): React.JSX.Element {
                     {isThis && brief.kind === 'ready' && (
                       <div className="mt-3 rounded border border-border bg-surface-elevated p-3 text-xs text-text-secondary leading-relaxed">
                         <div className="text-[10px] lowercase text-text-muted mb-1.5">
-                          jarvis brief {brief.played ? '· playing' : `· ${brief.reason ?? 'not played'}`}
+                          jarvis brief{' '}
+                          {brief.played ? '· playing' : `· ${brief.reason ?? 'not played'}`}
                         </div>
                         {brief.summary}
                       </div>
                     )}
                     {isThis && brief.kind === 'error' && (
-                      <div className="mt-3 text-xs text-negative">Brief failed: {brief.message}</div>
+                      <div className="mt-3 text-xs text-negative">
+                        Brief failed: {brief.message}
+                      </div>
                     )}
                   </div>
                   <button

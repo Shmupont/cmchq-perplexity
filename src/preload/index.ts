@@ -61,8 +61,7 @@ const api = {
     remove: (ticker: string): Promise<Holding[]> => ipcRenderer.invoke(IPC.HOLDINGS_DELETE, ticker)
   },
   brain: {
-    getGraph: (force?: boolean): Promise<BrainGraph> =>
-      ipcRenderer.invoke(IPC.BRAIN_GRAPH, force),
+    getGraph: (force?: boolean): Promise<BrainGraph> => ipcRenderer.invoke(IPC.BRAIN_GRAPH, force),
     getNote: (id: string): Promise<NoteDetail | null> => ipcRenderer.invoke(IPC.BRAIN_NOTE, id),
     search: (query: string, limit?: number): Promise<BrainSearchHit[]> =>
       ipcRenderer.invoke(IPC.BRAIN_SEARCH, query, limit),
@@ -114,10 +113,8 @@ const api = {
     onSyncProgress: (
       cb: (p: { account: string; done: number; total: number }) => void
     ): Unsubscribe => {
-      const listener = (
-        _: unknown,
-        p: { account: string; done: number; total: number }
-      ): void => cb(p)
+      const listener = (_: unknown, p: { account: string; done: number; total: number }): void =>
+        cb(p)
       ipcRenderer.on(EVT.EMAIL_SYNC_PROGRESS, listener)
       return () => ipcRenderer.removeListener(EVT.EMAIL_SYNC_PROGRESS, listener)
     }
@@ -157,9 +154,7 @@ const api = {
   news: {
     list: (limit?: number): Promise<NewsItem[]> => ipcRenderer.invoke(IPC.NEWS_LIST, limit),
     refresh: (): Promise<NewsFetchResult> => ipcRenderer.invoke(IPC.NEWS_REFRESH),
-    brief: (
-      id: string
-    ): Promise<{ summary: string; played: boolean; reason: string | null }> =>
+    brief: (id: string): Promise<{ summary: string; played: boolean; reason: string | null }> =>
       ipcRenderer.invoke(IPC.NEWS_BRIEF, id)
   },
   jarvis: {

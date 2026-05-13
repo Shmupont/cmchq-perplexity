@@ -76,9 +76,7 @@ export function Brain(): React.JSX.Element {
           />
           {status && (
             <div className="flex items-center gap-2 text-text-muted">
-              <span title={status.vaultPath}>
-                {status.total} notes
-              </span>
+              <span title={status.vaultPath}>{status.total} notes</span>
               <span>·</span>
               <span
                 className={

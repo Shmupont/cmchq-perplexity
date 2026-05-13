@@ -30,10 +30,7 @@ export function registerBrainIpc(): void {
 
   ipcMain.handle(
     IPC.BRAIN_CHAT,
-    async (
-      _e,
-      input: { id: string; messages: BrainChatMessage[]; model: BrainChatModel }
-    ) => {
+    async (_e, input: { id: string; messages: BrainChatMessage[]; model: BrainChatModel }) => {
       // Fire-and-forget — results stream via EVT.BRAIN_CHAT_TOKEN
       brainChat(input.id, input.messages, input.model).catch((err) =>
         console.error('[brain] chat error:', err)

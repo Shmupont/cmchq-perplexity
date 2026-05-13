@@ -17,8 +17,8 @@ export function TriageView({ data, selectedId, onSelect }: Props): React.JSX.Ele
           no accounts connected
         </div>
         <p className="text-sm text-text-secondary mt-3 max-w-md">
-          Add a Gmail account in Settings — once authed, the top 3 urgent emails per inbox
-          will appear here, scored by Claude haiku.
+          Add a Gmail account in Settings — once authed, the top 3 urgent emails per inbox will
+          appear here, scored by Claude haiku.
         </p>
       </div>
     )

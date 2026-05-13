@@ -1,11 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
-import type {
-  AgentSummary,
-  AgentEvent,
-  AgentStreamMessage
-} from '../../../../shared/agent-types'
+import type { AgentSummary, AgentEvent, AgentStreamMessage } from '../../../../shared/agent-types'
 
 type RunState = 'idle' | 'running' | 'done' | 'error'
 
@@ -147,9 +143,7 @@ export function TaskRunner({
           <span className="text-[11px] text-text-muted">streaming response</span>
         )}
         {state === 'done' && <span className="text-[11px] text-positive">complete</span>}
-        {state === 'error' && (
-          <span className="text-[11px] text-negative">error: {error}</span>
-        )}
+        {state === 'error' && <span className="text-[11px] text-negative">error: {error}</span>}
       </div>
 
       {(output || tools.length > 0) && (

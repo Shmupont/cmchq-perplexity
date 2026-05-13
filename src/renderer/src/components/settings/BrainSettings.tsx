@@ -68,9 +68,7 @@ export function BrainSettings(): React.JSX.Element {
           <Row label="Notes">
             <span className="font-mono text-sm text-text-primary">{status.total}</span>
             {status.total > 0 && status.indexed > 0 && (
-              <span className="ml-2 text-[11px] text-positive">
-                · {status.indexed} indexed
-              </span>
+              <span className="ml-2 text-[11px] text-positive">· {status.indexed} indexed</span>
             )}
             {status.total > 0 && status.indexed === 0 && status.hasOpenAIKey && (
               <span className="ml-2 text-[11px] text-warning">· not indexed</span>
@@ -84,15 +82,11 @@ export function BrainSettings(): React.JSX.Element {
 
           <Row label="Last indexed">
             <span className="text-[11px] text-text-secondary">
-              {status.lastIndexedAt
-                ? new Date(status.lastIndexedAt).toLocaleString()
-                : 'never'}
+              {status.lastIndexedAt ? new Date(status.lastIndexedAt).toLocaleString() : 'never'}
             </span>
           </Row>
 
-          {status.error && (
-            <div className="text-[11px] text-negative">{status.error}</div>
-          )}
+          {status.error && <div className="text-[11px] text-negative">{status.error}</div>}
 
           <div className="flex items-center gap-2 pt-1">
             <button
@@ -123,13 +117,7 @@ export function BrainSettings(): React.JSX.Element {
   )
 }
 
-function Row({
-  label,
-  children
-}: {
-  label: string
-  children: React.ReactNode
-}): React.JSX.Element {
+function Row({ label, children }: { label: string; children: React.ReactNode }): React.JSX.Element {
   return (
     <div className="grid grid-cols-[120px_1fr] items-baseline gap-3 text-sm">
       <span className="text-[10px] uppercase tracking-wider text-text-muted">{label}</span>

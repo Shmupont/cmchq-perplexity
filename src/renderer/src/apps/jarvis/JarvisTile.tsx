@@ -17,7 +17,7 @@ export function JarvisTile(): React.JSX.Element {
         .then((msgs) => {
           if (cancelled) return
           setLastMsg(msgs.at(-1) ?? null)
-          setSecondLast(msgs.length > 1 ? msgs.at(-2) ?? null : null)
+          setSecondLast(msgs.length > 1 ? (msgs.at(-2) ?? null) : null)
         })
         .catch((err) => console.error('[jarvis-tile] history:', err))
     }
@@ -67,9 +67,7 @@ export function JarvisTile(): React.JSX.Element {
           <div
             className={`truncate ${lastMsg.role === 'user' ? 'text-text-secondary' : 'text-text-primary'}`}
           >
-            <span
-              className={lastMsg.role === 'user' ? 'text-text-muted' : 'text-accent-cyan'}
-            >
+            <span className={lastMsg.role === 'user' ? 'text-text-muted' : 'text-accent-cyan'}>
               {lastMsg.role === 'user' ? 'you · ' : 'jarvis · '}
             </span>
             {lastMsg.content}

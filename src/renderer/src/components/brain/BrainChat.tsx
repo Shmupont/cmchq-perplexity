@@ -140,7 +140,9 @@ export function BrainChat({ onOpenNote }: Props): React.JSX.Element {
                   : 'bg-surface-elevated border border-border text-text-primary'
               }`}
             >
-              <div className="whitespace-pre-wrap leading-relaxed">{m.content || (streaming && pendingId === m.id ? '…' : '')}</div>
+              <div className="whitespace-pre-wrap leading-relaxed">
+                {m.content || (streaming && pendingId === m.id ? '…' : '')}
+              </div>
               {m.role === 'assistant' && m.sources && m.sources.length > 0 && (
                 <div className="mt-2 pt-2 border-t border-border">
                   <div className="text-[10px] uppercase tracking-widest text-text-muted mb-1">

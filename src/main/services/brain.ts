@@ -670,10 +670,7 @@ export async function brainChat(
     }))
     if (chunks.length > 0) {
       contextBlock = chunks
-        .map(
-          (c, i) =>
-            `[${i + 1}] "${c.title}"${c.heading ? ` — ${c.heading}` : ''}\n${c.text}`
-        )
+        .map((c, i) => `[${i + 1}] "${c.title}"${c.heading ? ` — ${c.heading}` : ''}\n${c.text}`)
         .join('\n\n')
     }
   } catch (err) {

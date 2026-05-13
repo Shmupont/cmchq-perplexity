@@ -38,9 +38,7 @@ export function VaultStats({
   }, [])
 
   if (!stats) {
-    return (
-      <div className="px-4 py-3 text-[11px] text-text-muted">Loading vault stats…</div>
-    )
+    return <div className="px-4 py-3 text-[11px] text-text-muted">Loading vault stats…</div>
   }
 
   const total = stats.total
@@ -49,9 +47,7 @@ export function VaultStats({
   return (
     <div className="px-4 py-3 space-y-3">
       <div className="flex items-baseline justify-between">
-        <div className="text-[10px] uppercase tracking-widest text-text-muted">
-          Vault
-        </div>
+        <div className="text-[10px] uppercase tracking-widest text-text-muted">Vault</div>
         <div className="text-sm font-mono text-text-primary">{total} notes</div>
       </div>
 

@@ -13,10 +13,7 @@ function TilePreview(): React.JSX.Element {
     let cancelled = false
     const load = async (): Promise<void> => {
       try {
-        const [t, s] = await Promise.all([
-          window.api.email.triage(),
-          window.api.email.status()
-        ])
+        const [t, s] = await Promise.all([window.api.email.triage(), window.api.email.status()])
         if (!cancelled) {
           setTriage(t)
           setStatus(s)
@@ -62,9 +59,7 @@ function TilePreview(): React.JSX.Element {
                 <span className="text-text-primary truncate">
                   {email.from_name || email.from_address || 'unknown'}
                 </span>
-                <span className="text-[9px] lowercase text-text-muted ml-2 shrink-0">
-                  {label}
-                </span>
+                <span className="text-[9px] lowercase text-text-muted ml-2 shrink-0">{label}</span>
               </div>
               <div className="text-text-secondary text-[11px] truncate">
                 {email.subject || '(no subject)'}

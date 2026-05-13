@@ -4,7 +4,13 @@
 
 import { ipcMain } from 'electron'
 import { IPC, EVT } from '../constants'
-import { listAgents, runAgent, getTaskHistory, getTaskResult, type AgentDef } from '../services/agents'
+import {
+  listAgents,
+  runAgent,
+  getTaskHistory,
+  getTaskResult,
+  type AgentDef
+} from '../services/agents'
 import type {
   AgentId,
   AgentEvent,
@@ -35,9 +41,7 @@ export function registerAgentsIpc(): void {
     getTaskHistory(limit ?? 50)
   )
 
-  ipcMain.handle(IPC.AGENTS_TASK_RESULT, (_e, taskId: number): Task | null =>
-    getTaskResult(taskId)
-  )
+  ipcMain.handle(IPC.AGENTS_TASK_RESULT, (_e, taskId: number): Task | null => getTaskResult(taskId))
 
   ipcMain.handle(
     IPC.AGENTS_RUN,

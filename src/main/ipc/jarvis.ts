@@ -8,9 +8,8 @@ import type { JarvisRole } from '../../shared/jarvis-types'
 
 export function registerJarvisIpc(): void {
   ipcMain.handle(IPC.JARVIS_HISTORY, (_e, limit?: number) => listMessages(limit ?? 200))
-  ipcMain.handle(
-    IPC.JARVIS_SEND,
-    (_e, input: { role: JarvisRole; content: string }) => appendMessage(input.role, input.content)
+  ipcMain.handle(IPC.JARVIS_SEND, (_e, input: { role: JarvisRole; content: string }) =>
+    appendMessage(input.role, input.content)
   )
   ipcMain.handle(IPC.JARVIS_STATUS, () => getStatus())
 }
