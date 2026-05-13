@@ -2,6 +2,8 @@ import { useCallback, useEffect, useState } from 'react'
 import type { Holding } from '../../../shared/types'
 import { Num } from '@components/common/Number'
 import { ApiKeysSection } from '@components/settings/ApiKeysSection'
+import { BrainSettings } from '@components/settings/BrainSettings'
+import { InboxSettings } from '@components/settings/InboxSettings'
 
 const ASSET_TYPES = ['stock', 'etf', 'bond_etf', 'cash'] as const
 type AssetType = (typeof ASSET_TYPES)[number]
@@ -90,6 +92,10 @@ export function Settings(): React.JSX.Element {
       </div>
 
       <ApiKeysSection />
+
+      <BrainSettings />
+
+      <InboxSettings />
 
       <section className="card-elevated p-5 mb-6">
         <div className="text-[10px] uppercase tracking-widest text-text-muted mb-3">
