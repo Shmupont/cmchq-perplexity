@@ -26,9 +26,6 @@ import type {
   BrainChatModel,
   BrainChatStreamEvent
 } from '../shared/brain-types'
-
-type Unsubscribe = () => void
-
 import type {
   AgentId,
   AgentSummary,
@@ -38,6 +35,10 @@ import type {
   BriefType,
   KeyName
 } from '../shared/agent-types'
+import type { NewsItem, NewsFetchResult } from '../shared/news-types'
+import type { JarvisMessage, JarvisRole } from '../shared/jarvis-types'
+
+type Unsubscribe = () => void
 
 const api = {
   portfolio: {
@@ -59,42 +60,7 @@ const api = {
     }): Promise<Holding[]> => ipcRenderer.invoke(IPC.HOLDINGS_UPSERT, input),
     remove: (ticker: string): Promise<Holding[]> => ipcRenderer.invoke(IPC.HOLDINGS_DELETE, ticker)
   },
-brain: {
-    getGraph: (force?: boolean): Promise<BrainGraph> => ipcRenderer.invoke(IPC.BRAIN_GRAPH, force)
-
-agents: {
-    list: (): Promise<AgentSummary[]> => ipcRenderer.invoke(IPC.AGENTS_LIST),
-    run: (
-      agentId: AgentId,
-      description: string
-    ): Promise<{ taskId: number; output: string; tokensUsed: number }> =>
-      ipcRenderer.invoke(IPC.AGENTS_RUN, { agentId, description }),
-    taskHistory: (limit?: number): Promise<Task[]> =>
-      ipcRenderer.invoke(IPC.AGENTS_TASK_HISTORY, limit),
-    taskResult: (taskId: number): Promise<Task | null> =>
-      ipcRenderer.invoke(IPC.AGENTS_TASK_RESULT, taskId),
-    onStream: (handler: (msg: AgentStreamMessage) => void): (() => void) => {
-      const wrapped = (_e: unknown, msg: AgentStreamMessage): void => handler(msg)
-      ipcRenderer.on(EVT.AGENTS_STREAM, wrapped)
-      return () => ipcRenderer.removeListener(EVT.AGENTS_STREAM, wrapped)
-    }
-  },
-  briefing: {
-    latest: (type: BriefType): Promise<Briefing | null> =>
-      ipcRenderer.invoke(IPC.BRIEFING_LATEST, type),
-    history: (type: BriefType, limit?: number): Promise<Briefing[]> =>
-      ipcRenderer.invoke(IPC.BRIEFING_HISTORY, type, limit),
-    regenerate: (type: BriefType): Promise<Briefing> =>
-      ipcRenderer.invoke(IPC.BRIEFING_REGENERATE, type)
-  },
-  keys: {
-    status: (): Promise<Record<KeyName, boolean>> => ipcRenderer.invoke(IPC.KEYS_STATUS),
-    set: (name: KeyName, value: string): Promise<Record<KeyName, boolean>> =>
-      ipcRenderer.invoke(IPC.KEYS_SET, name, value),
-    clear: (name: KeyName): Promise<Record<KeyName, boolean>> =>
-      ipcRenderer.invoke(IPC.KEYS_CLEAR, name)
-
-brain: {
+  brain: {
     getGraph: (force?: boolean): Promise<BrainGraph> =>
       ipcRenderer.invoke(IPC.BRAIN_GRAPH, force),
     getNote: (id: string): Promise<NoteDetail | null> => ipcRenderer.invoke(IPC.BRAIN_NOTE, id),
@@ -155,6 +121,54 @@ brain: {
       ipcRenderer.on(EVT.EMAIL_SYNC_PROGRESS, listener)
       return () => ipcRenderer.removeListener(EVT.EMAIL_SYNC_PROGRESS, listener)
     }
+  },
+  agents: {
+    list: (): Promise<AgentSummary[]> => ipcRenderer.invoke(IPC.AGENTS_LIST),
+    run: (
+      agentId: AgentId,
+      description: string
+    ): Promise<{ taskId: number; output: string; tokensUsed: number }> =>
+      ipcRenderer.invoke(IPC.AGENTS_RUN, { agentId, description }),
+    taskHistory: (limit?: number): Promise<Task[]> =>
+      ipcRenderer.invoke(IPC.AGENTS_TASK_HISTORY, limit),
+    taskResult: (taskId: number): Promise<Task | null> =>
+      ipcRenderer.invoke(IPC.AGENTS_TASK_RESULT, taskId),
+    onStream: (handler: (msg: AgentStreamMessage) => void): Unsubscribe => {
+      const wrapped = (_e: unknown, msg: AgentStreamMessage): void => handler(msg)
+      ipcRenderer.on(EVT.AGENTS_STREAM, wrapped)
+      return () => ipcRenderer.removeListener(EVT.AGENTS_STREAM, wrapped)
+    }
+  },
+  briefing: {
+    latest: (type: BriefType): Promise<Briefing | null> =>
+      ipcRenderer.invoke(IPC.BRIEFING_LATEST, type),
+    history: (type: BriefType, limit?: number): Promise<Briefing[]> =>
+      ipcRenderer.invoke(IPC.BRIEFING_HISTORY, type, limit),
+    regenerate: (type: BriefType): Promise<Briefing> =>
+      ipcRenderer.invoke(IPC.BRIEFING_REGENERATE, type)
+  },
+  keys: {
+    status: (): Promise<Record<KeyName, boolean>> => ipcRenderer.invoke(IPC.KEYS_STATUS),
+    set: (name: KeyName, value: string): Promise<Record<KeyName, boolean>> =>
+      ipcRenderer.invoke(IPC.KEYS_SET, name, value),
+    clear: (name: KeyName): Promise<Record<KeyName, boolean>> =>
+      ipcRenderer.invoke(IPC.KEYS_CLEAR, name)
+  },
+  news: {
+    list: (limit?: number): Promise<NewsItem[]> => ipcRenderer.invoke(IPC.NEWS_LIST, limit),
+    refresh: (): Promise<NewsFetchResult> => ipcRenderer.invoke(IPC.NEWS_REFRESH),
+    brief: (
+      id: string
+    ): Promise<{ summary: string; played: boolean; reason: string | null }> =>
+      ipcRenderer.invoke(IPC.NEWS_BRIEF, id)
+  },
+  jarvis: {
+    history: (limit?: number): Promise<JarvisMessage[]> =>
+      ipcRenderer.invoke(IPC.JARVIS_HISTORY, limit),
+    append: (role: JarvisRole, content: string): Promise<JarvisMessage> =>
+      ipcRenderer.invoke(IPC.JARVIS_SEND, { role, content }),
+    status: (): Promise<{ lastMessage: JarvisMessage | null }> =>
+      ipcRenderer.invoke(IPC.JARVIS_STATUS)
   }
 }
 

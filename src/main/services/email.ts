@@ -468,7 +468,11 @@ export async function retriageAll(): Promise<number> {
 
 // ---------- Queries ----------
 
-type EmailJoinRow = EmailRecord & { is_unread: number; is_starred: number; has_attachment: number }
+type EmailJoinRow = Omit<EmailRecord, 'is_unread' | 'is_starred' | 'has_attachment'> & {
+  is_unread: number
+  is_starred: number
+  has_attachment: number
+}
 
 const SELECT_BASE = `
   SELECT e.id, e.account_id,

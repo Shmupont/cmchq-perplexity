@@ -11,6 +11,7 @@ export const EMBEDDING_MODEL = 'text-embedding-3-small'
 
 // IPC channel namespaces — keep names stable; renderer references via window.api.*
 export const IPC = {
+  // Portfolio (Terminal)
   PORTFOLIO_GET: 'portfolio:get',
   PORTFOLIO_QUOTE: 'portfolio:quote',
   PORTFOLIO_MACRO: 'portfolio:macro',
@@ -20,7 +21,8 @@ export const IPC = {
   HOLDINGS_UPSERT: 'holdings:upsert',
   HOLDINGS_DELETE: 'holdings:delete',
 
-BRAIN_GRAPH: 'brain:graph',
+  // Brain
+  BRAIN_GRAPH: 'brain:graph',
   BRAIN_NOTE: 'brain:note',
   BRAIN_SEARCH: 'brain:search',
   BRAIN_CHAT: 'brain:chat',
@@ -29,6 +31,7 @@ BRAIN_GRAPH: 'brain:graph',
   BRAIN_REINDEX: 'brain:reindex',
   BRAIN_STATUS: 'brain:status',
 
+  // Email (Inbox)
   EMAIL_TRIAGE: 'email:triage',
   EMAIL_LIST: 'email:list',
   EMAIL_DETAIL: 'email:detail',
@@ -38,9 +41,9 @@ BRAIN_GRAPH: 'brain:graph',
   EMAIL_ACCOUNT_REMOVE: 'email:account:remove',
   EMAIL_SYNC: 'email:sync',
   EMAIL_STATUS: 'email:status',
-  EMAIL_RETRIAGE: 'email:retriage'
+  EMAIL_RETRIAGE: 'email:retriage',
 
-// Keys (API keys, encrypted via safeStorage)
+  // Keys (API keys, encrypted via safeStorage)
   KEYS_STATUS: 'keys:status',
   KEYS_SET: 'keys:set',
   KEYS_CLEAR: 'keys:clear',
@@ -54,18 +57,28 @@ BRAIN_GRAPH: 'brain:graph',
   // Briefing
   BRIEFING_LATEST: 'briefing:latest',
   BRIEFING_HISTORY: 'briefing:history',
-  BRIEFING_REGENERATE: 'briefing:regenerate'
+  BRIEFING_REGENERATE: 'briefing:regenerate',
+
+  // News / WSJ tile (mini-apps branch)
+  NEWS_LIST: 'news:list',
+  NEWS_REFRESH: 'news:refresh',
+  NEWS_BRIEF: 'news:brief',
+
+  // Jarvis / OpenClaw TUI (mini-apps branch)
+  JARVIS_HISTORY: 'jarvis:history',
+  JARVIS_SEND: 'jarvis:send',
+  JARVIS_STATUS: 'jarvis:status'
 } as const
 
 // Event channels — main → renderer streaming pushes.
 export const EVT = {
-BRAIN_CHAT_TOKEN: 'brain:chat:token',
+  BRAIN_CHAT_TOKEN: 'brain:chat:token',
   BRAIN_INDEX_PROGRESS: 'brain:index:progress',
   BRAIN_GRAPH_CHANGED: 'brain:graph:changed',
-  EMAIL_SYNC_PROGRESS: 'email:sync:progress'
-
-// Crew streaming, payload includes taskId for fan-out
-  AGENTS_STREAM: 'agents:stream'
+  EMAIL_SYNC_PROGRESS: 'email:sync:progress',
+  AGENTS_STREAM: 'agents:stream',
+  NEWS_REFRESHED: 'news:refreshed',
+  JARVIS_EVENT: 'jarvis:event'
 } as const
 
 export const VAULT_DEFAULT_PATH =

@@ -115,12 +115,12 @@ function migrate(d: Database.Database): void {
 
     -- WSJ / news feed (mini-apps branch)
     CREATE TABLE IF NOT EXISTS news_items (
-      id TEXT PRIMARY KEY,
-      source TEXT NOT NULL,
+      id TEXT PRIMARY KEY,           -- hash of source + link
+      source TEXT NOT NULL,          -- 'wsj' | 'reuters'
       title TEXT NOT NULL,
       link TEXT NOT NULL,
-      description TEXT,
-      summary TEXT,
+      description TEXT,              -- 2-line preview from RSS
+      summary TEXT,                  -- Claude 3-sentence summary, cached
       published_at TEXT,
       fetched_at TEXT DEFAULT CURRENT_TIMESTAMP
     );
@@ -129,7 +129,7 @@ function migrate(d: Database.Database): void {
     -- Jarvis chat history (mini-apps branch)
     CREATE TABLE IF NOT EXISTS jarvis_messages (
       id INTEGER PRIMARY KEY,
-      role TEXT NOT NULL,
+      role TEXT NOT NULL,            -- 'user' | 'jarvis'
       content TEXT NOT NULL,
       created_at TEXT DEFAULT CURRENT_TIMESTAMP
     );

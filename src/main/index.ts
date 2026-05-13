@@ -5,14 +5,16 @@ import icon from '../../resources/icon.png?asset'
 import { getDb, closeDb } from './services/db'
 import { registerPortfolioIpc } from './ipc/portfolio'
 import { registerBrainIpc } from './ipc/brain'
+import { registerEmailIpc } from './ipc/email'
 import { registerAgentsIpc } from './ipc/agents'
 import { registerBriefingIpc } from './ipc/briefing'
 import { registerKeysIpc } from './ipc/keys'
-
-import { registerEmailIpc } from './ipc/email'
+import { registerNewsIpc } from './ipc/news'
+import { registerJarvisIpc } from './ipc/jarvis'
 import { initBrain, stopVaultWatcher } from './services/brain'
 import { initEmail, stopEmailSync } from './services/email'
 import { startScheduler, stopScheduler } from './services/scheduler'
+import { startNewsScheduler, stopNewsScheduler } from './services/news'
 
 function createWindow(): void {
   const mainWindow = new BrowserWindow({
@@ -61,19 +63,17 @@ app.whenReady().then(() => {
 
   // Register IPC handlers
   registerPortfolioIpc()
-registerBrainIpc()
-
-registerAgentsIpc()
+  registerBrainIpc()
+  registerEmailIpc()
+  registerAgentsIpc()
   registerBriefingIpc()
   registerKeysIpc()
-
-  // Start the background scheduler (market-hours portfolio refresh + briefings)
-
-registerBrainIpc()
-  registerEmailIpc()
+  registerNewsIpc()
+  registerJarvisIpc()
 
   // Background services
   startScheduler()
+  startNewsScheduler()
   initBrain()
   initEmail()
 
@@ -92,6 +92,7 @@ app.on('window-all-closed', () => {
 
 app.on('before-quit', () => {
   stopScheduler()
+  stopNewsScheduler()
   stopVaultWatcher()
   stopEmailSync()
   closeDb()
