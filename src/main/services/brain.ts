@@ -8,7 +8,7 @@ import { existsSync } from 'fs'
 import { join, relative, basename } from 'path'
 import { homedir } from 'os'
 import { BrowserWindow } from 'electron'
-import chokidar from 'chokidar'
+import chokidar, { type FSWatcher } from 'chokidar'
 import Anthropic from '@anthropic-ai/sdk'
 import OpenAI from 'openai'
 import { getDb } from './db'
@@ -79,7 +79,7 @@ let loadInFlight: Promise<void> | null = null
 let indexInFlight: Promise<void> | null = null
 let lastIndexedAt: string | null = null
 let lastError: string | null = null
-let watcher: chokidar.FSWatcher | null = null
+let watcher: FSWatcher | null = null
 
 const GRAPH_CACHE_MS = 60_000
 
@@ -193,7 +193,7 @@ async function* walk(dir: string): AsyncGenerator<string> {
 async function parseFile(abs: string, root: string): Promise<ParsedNote | null> {
   try {
     const [raw, st] = await Promise.all([fs.readFile(abs, 'utf8'), fs.stat(abs)])
-    const { fm, body } = parseFrontmatter(raw)
+    const { fm } = parseFrontmatter(raw)
     const stripped = stripFrontmatter(raw)
     const rel = relative(root, abs).replace(/\\/g, '/').replace(/\.md$/i, '')
     const idLower = rel.toLowerCase()

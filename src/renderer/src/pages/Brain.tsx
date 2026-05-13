@@ -44,9 +44,9 @@ export function Brain(): React.JSX.Element {
     }
   }, [])
 
-  function openNote(id: string): void {
+  function openNote(id: string | null): void {
     setSelectedId(id)
-    setTab('note')
+    if (id) setTab('note')
   }
 
   async function reindex(): Promise<void> {

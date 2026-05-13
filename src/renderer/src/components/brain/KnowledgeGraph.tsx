@@ -133,8 +133,9 @@ export function KnowledgeGraph({
     })
 
     if (interactive) {
-      graph.on('node:click', (evt: { target?: { id?: string } }) => {
-        const id = evt?.target?.id
+      graph.on('node:click', (evt: unknown) => {
+        const target = (evt as { target?: { id?: string } })?.target
+        const id = target?.id
         if (typeof id === 'string') onSelectRef.current?.(id)
       })
       graph.on('canvas:click', () => onSelectRef.current?.(null))
