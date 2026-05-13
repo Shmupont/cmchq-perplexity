@@ -90,62 +90,118 @@ export function AllocationDonut({ rows }: Props): React.JSX.Element {
   const hovered = arcs.find((a) => a.key === hover)
 
   return (
-    <section className="card p-4 flex flex-col h-full">
-      <div className="text-[10px] uppercase tracking-widest text-text-muted mb-3">Allocation</div>
-      <div className="flex-1 flex flex-col items-center justify-center gap-3">
+    <section className="card p-4 flex flex-col h-full overflow-hidden">
+      <div className="flex items-center justify-between mb-3">
+        <span className="card-eyebrow">Allocation</span>
+        <span className="text-[10px] uppercase tracking-[0.2em] text-text-muted">
+          {arcs.length} sectors
+        </span>
+      </div>
+      <div className="flex-1 flex flex-col items-center justify-center gap-4">
         <div className="relative">
-          <svg width={size} height={size}>
+          <svg width={size} height={size} className="overflow-visible">
+            <defs>
+              {arcs.map((a) => {
+                const id = a.key.replace(/\s/g, '')
+                return (
+                  <filter
+                    key={`glow-${id}`}
+                    id={`glow-${id}`}
+                    x="-50%"
+                    y="-50%"
+                    width="200%"
+                    height="200%"
+                  >
+                    <feGaussianBlur stdDeviation="4" result="blur" />
+                    <feMerge>
+                      <feMergeNode in="blur" />
+                      <feMergeNode in="SourceGraphic" />
+                    </feMerge>
+                  </filter>
+                )
+              })}
+            </defs>
             {arcs.length === 0 && (
-              <circle cx={cx} cy={cy} r={rInner} fill="none" stroke="#1a2a3a" strokeWidth={1} />
-            )}
-            {arcs.map((a) => (
-              <path
-                key={a.key}
-                d={arcPath(cx, cy, r, rInner, a.start, a.end)}
-                fill={a.color}
-                opacity={hover === null || hover === a.key ? 1 : 0.3}
-                onMouseEnter={() => setHover(a.key)}
-                onMouseLeave={() => setHover(null)}
-                style={{ transition: 'opacity 200ms', cursor: 'pointer' }}
+              <circle
+                cx={cx}
+                cy={cy}
+                r={rInner + 12}
+                fill="none"
+                stroke="#1a2a3a"
+                strokeWidth={1}
+                strokeDasharray="3 5"
               />
-            ))}
+            )}
+            {arcs.map((a) => {
+              const isActive = hover === a.key
+              const id = a.key.replace(/\s/g, '')
+              return (
+                <path
+                  key={a.key}
+                  d={arcPath(cx, cy, r, rInner, a.start, a.end)}
+                  fill={a.color}
+                  opacity={hover === null ? 0.92 : isActive ? 1 : 0.22}
+                  filter={isActive ? `url(#glow-${id})` : undefined}
+                  onMouseEnter={() => setHover(a.key)}
+                  onMouseLeave={() => setHover(null)}
+                  style={{
+                    transition: 'opacity 220ms ease-out, filter 220ms ease-out',
+                    cursor: 'pointer'
+                  }}
+                />
+              )
+            })}
+            <circle
+              cx={cx}
+              cy={cy}
+              r={rInner - 1}
+              fill="none"
+              stroke="rgba(34, 211, 238, 0.12)"
+              strokeWidth={1}
+            />
           </svg>
           <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-            <div className="text-[10px] uppercase tracking-widest text-text-muted">
-              {hovered ? hovered.key : 'Total'}
-            </div>
+            <div className="card-eyebrow">{hovered ? hovered.key : 'Total'}</div>
             <Num
               value={hovered ? hovered.value : total}
               prefix="$"
               decimals={0}
-              className="text-lg text-text-primary"
+              className="text-xl text-text-primary mt-1"
             />
             <Num
               value={hovered ? hovered.weight : 100}
               suffix="%"
               decimals={1}
-              className="text-[11px] text-text-secondary"
+              className="text-[11px] text-accent-cyan mt-0.5"
             />
           </div>
         </div>
-        <div className="w-full max-h-32 overflow-auto">
-          <ul className="flex flex-wrap gap-x-3 gap-y-1 justify-center">
-            {arcs.map((a) => (
-              <li
-                key={a.key}
-                onMouseEnter={() => setHover(a.key)}
-                onMouseLeave={() => setHover(null)}
-                className="flex items-center gap-1.5 text-[11px] cursor-default"
-              >
-                <span
-                  className="w-2 h-2 rounded-sm"
-                  style={{ backgroundColor: a.color }}
-                  aria-hidden
-                />
-                <span className="text-text-secondary">{a.key}</span>
-                <Num value={a.weight} suffix="%" decimals={1} className="text-text-muted" />
-              </li>
-            ))}
+        <div className="w-full max-h-32 overflow-auto px-1">
+          <ul className="flex flex-wrap gap-x-3 gap-y-1.5 justify-center">
+            {arcs.map((a) => {
+              const isActive = hover === a.key
+              return (
+                <li
+                  key={a.key}
+                  onMouseEnter={() => setHover(a.key)}
+                  onMouseLeave={() => setHover(null)}
+                  className={`flex items-center gap-1.5 text-[11px] cursor-default transition-opacity ${
+                    hover && !isActive ? 'opacity-50' : 'opacity-100'
+                  }`}
+                >
+                  <span
+                    className="w-2 h-2 rounded-sm transition-shadow"
+                    style={{
+                      backgroundColor: a.color,
+                      boxShadow: isActive ? `0 0 8px ${a.color}` : undefined
+                    }}
+                    aria-hidden
+                  />
+                  <span className="text-text-secondary">{a.key}</span>
+                  <Num value={a.weight} suffix="%" decimals={1} className="text-text-muted" />
+                </li>
+              )
+            })}
           </ul>
         </div>
       </div>

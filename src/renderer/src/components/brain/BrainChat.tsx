@@ -89,85 +89,91 @@ export function BrainChat({ onOpenNote }: Props): React.JSX.Element {
 
   return (
     <div className="flex flex-col h-full">
-      <header className="flex items-center justify-between px-4 py-2.5 border-b border-border">
+      <header className="flex items-center justify-between px-4 py-3 border-b border-border/70">
         <div>
-          <div className="text-[10px] uppercase tracking-widest text-text-muted">Brain Chat</div>
-          <div className="text-xs text-text-secondary mt-0.5">
+          <div className="card-eyebrow-accent">Brain Chat</div>
+          <div className="text-xs text-text-secondary mt-1">
             Ask anything about your notes — I have all of them.
           </div>
         </div>
-        <div className="flex items-center gap-1.5">
-          <button
-            onClick={() => setModel('sonnet')}
-            className={`text-[10px] uppercase tracking-wider px-2 py-1 rounded transition-colors ${
-              model === 'sonnet'
-                ? 'bg-accent-blue/20 border border-accent-blue/40 text-accent-blue'
-                : 'border border-border text-text-muted hover:text-text-secondary'
-            }`}
-          >
+        <div className="segmented">
+          <button data-active={model === 'sonnet'} onClick={() => setModel('sonnet')}>
             Fast
           </button>
-          <button
-            onClick={() => setModel('opus')}
-            className={`text-[10px] uppercase tracking-wider px-2 py-1 rounded transition-colors ${
-              model === 'opus'
-                ? 'bg-accent-cyan/20 border border-accent-cyan/40 text-accent-cyan'
-                : 'border border-border text-text-muted hover:text-text-secondary'
-            }`}
-          >
+          <button data-active={model === 'opus'} onClick={() => setModel('opus')}>
             Deep
           </button>
         </div>
       </header>
 
-      <div ref={scrollRef} className="flex-1 overflow-auto px-4 py-3 space-y-3">
+      <div ref={scrollRef} className="flex-1 overflow-auto px-4 py-4 space-y-3">
         {messages.length === 0 && (
           <div className="text-center text-xs text-text-muted py-12">
-            <div className="text-[10px] uppercase tracking-widest mb-2">examples</div>
-            <ul className="space-y-1">
-              <li>"what am I working on with Mark?"</li>
-              <li>"summarize my goals for this quarter"</li>
-              <li>"who have I talked to about portfolio strategy?"</li>
+            <div className="card-eyebrow-accent mb-3">examples</div>
+            <ul className="space-y-1.5">
+              <li className="text-text-secondary">"what am I working on with Mark?"</li>
+              <li className="text-text-secondary">"summarize my goals for this quarter"</li>
+              <li className="text-text-secondary">
+                "who have I talked to about portfolio strategy?"
+              </li>
             </ul>
           </div>
         )}
-        {messages.map((m) => (
-          <div key={m.id} className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+        {messages.map((m) => {
+          const isStreamingThis = streaming && pendingId === m.id
+          return (
             <div
-              className={`max-w-[85%] rounded-lg px-3 py-2 text-sm ${
-                m.role === 'user'
-                  ? 'bg-accent-blue/15 border border-accent-blue/30 text-text-primary'
-                  : 'bg-surface-elevated border border-border text-text-primary'
-              }`}
+              key={m.id}
+              className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}
             >
-              <div className="whitespace-pre-wrap leading-relaxed">
-                {m.content || (streaming && pendingId === m.id ? '…' : '')}
-              </div>
-              {m.role === 'assistant' && m.sources && m.sources.length > 0 && (
-                <div className="mt-2 pt-2 border-t border-border">
-                  <div className="text-[10px] uppercase tracking-widest text-text-muted mb-1">
-                    sources
-                  </div>
-                  <div className="flex flex-wrap gap-1.5">
-                    {m.sources.slice(0, 6).map((s, i) => (
-                      <button
-                        key={`${m.id}-src-${i}`}
-                        onClick={() => onOpenNote?.(s.id)}
-                        className="text-[10px] px-1.5 py-0.5 rounded border border-border bg-surface hover:border-accent-cyan hover:text-accent-cyan transition-colors"
-                        title={s.snippet}
-                      >
-                        {s.title}
-                      </button>
+              <div
+                className={`max-w-[85%] rounded-lg px-3.5 py-2.5 text-sm transition-all ${
+                  m.role === 'user'
+                    ? 'bg-gradient-to-br from-accent-blue/[0.18] to-accent-blue/[0.08] border border-accent-blue/30 text-text-primary backdrop-blur-md'
+                    : 'glass text-text-primary'
+                }`}
+              >
+                <div className="whitespace-pre-wrap leading-relaxed">
+                  {m.content ||
+                    (isStreamingThis ? (
+                      <span className="inline-flex items-center gap-1.5 text-text-muted">
+                        <span className="status-dot is-running" />
+                        <span className="text-[11px] uppercase tracking-[0.18em]">thinking</span>
+                      </span>
+                    ) : (
+                      ''
                     ))}
-                  </div>
+                  {isStreamingThis && m.content && (
+                    <span
+                      className="inline-block w-[6px] h-[14px] ml-0.5 align-middle bg-accent-cyan"
+                      style={{ animation: 'blink-cursor 1s steps(1) infinite' }}
+                    />
+                  )}
                 </div>
-              )}
+                {m.role === 'assistant' && m.sources && m.sources.length > 0 && (
+                  <div className="mt-2.5 pt-2 border-t border-border/70">
+                    <div className="card-eyebrow mb-1.5">sources</div>
+                    <div className="flex flex-wrap gap-1.5">
+                      {m.sources.slice(0, 6).map((s, i) => (
+                        <button
+                          key={`${m.id}-src-${i}`}
+                          onClick={() => onOpenNote?.(s.id)}
+                          className="text-[10px] px-2 py-0.5 rounded border border-border/80 bg-surface/60 hover:border-accent-cyan/60 hover:text-accent-cyan hover:bg-accent-cyan/[0.06] transition-all"
+                          title={s.snippet}
+                        >
+                          {s.title}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
-          </div>
-        ))}
+          )
+        })}
       </div>
 
-      <footer className="border-t border-border p-3">
+      <footer className="border-t border-border/70 p-3 bg-surface/40 backdrop-blur-md">
         <div className="flex items-end gap-2">
           <textarea
             value={input}
@@ -180,21 +186,17 @@ export function BrainChat({ onOpenNote }: Props): React.JSX.Element {
             }}
             placeholder="Ask your second brain…"
             rows={2}
-            className="flex-1 resize-none rounded-md bg-surface border border-border text-sm px-3 py-2 outline-none focus:border-accent-blue transition-colors"
+            className="flex-1 resize-none rounded-md bg-surface/60 border border-border/80 text-sm px-3 py-2 outline-none focus:border-accent-cyan/60 transition-colors backdrop-blur-md"
           />
           {streaming ? (
             <button
               onClick={cancel}
-              className="h-10 px-3 rounded-md border border-negative/40 text-negative hover:bg-negative/10 transition-colors text-xs uppercase tracking-wider"
+              className="h-10 px-3 rounded-md border border-negative/40 text-negative hover:bg-negative/10 transition-colors text-[11px] uppercase tracking-[0.18em]"
             >
               Stop
             </button>
           ) : (
-            <button
-              onClick={send}
-              disabled={!input.trim()}
-              className="h-10 px-4 rounded-md bg-accent-blue/20 border border-accent-blue/40 text-accent-blue hover:bg-accent-blue/30 disabled:opacity-40 transition-colors text-xs uppercase tracking-wider"
-            >
+            <button onClick={send} disabled={!input.trim()} className="btn-primary h-10">
               Send
             </button>
           )}

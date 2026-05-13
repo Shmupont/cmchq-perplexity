@@ -43,32 +43,42 @@ function TilePreview(): React.JSX.Element {
         label="inbox"
         right={
           totalUnread > 0 ? (
-            <span className="text-[10px] font-mono text-accent-cyan">{totalUnread}</span>
+            <span className="flex items-center gap-1">
+              <span className="status-dot is-running" />
+              <span className="text-[10px] font-mono text-accent-cyan">{totalUnread}</span>
+            </span>
           ) : null
         }
       />
-      <div className="flex-1 flex flex-col justify-center gap-1.5">
+      <div className="flex-1 flex flex-col justify-center gap-2.5">
         {topEmails.length === 0 ? (
-          <div className="text-[11px] text-text-muted text-center">
-            {status && status.accounts.length === 0 ? 'no accounts' : 'inbox zero'}
+          <div className="text-center py-4">
+            <div className="card-eyebrow mb-1">
+              {status && status.accounts.length === 0 ? 'offline' : 'cleared'}
+            </div>
+            <div className="text-[11px] text-text-secondary">
+              {status && status.accounts.length === 0 ? 'no accounts connected' : 'inbox zero'}
+            </div>
           </div>
         ) : (
           topEmails.map(({ label, email }) => (
             <div key={label} className="text-xs">
-              <div className="flex items-baseline justify-between">
-                <span className="text-text-primary truncate">
+              <div className="flex items-baseline justify-between gap-2">
+                <span className="text-text-primary truncate font-medium">
                   {email.from_name || email.from_address || 'unknown'}
                 </span>
-                <span className="text-[9px] lowercase text-text-muted ml-2 shrink-0">{label}</span>
+                <span className="text-[9px] uppercase tracking-[0.18em] text-text-muted shrink-0">
+                  {label}
+                </span>
               </div>
-              <div className="text-text-secondary text-[11px] truncate">
+              <div className="text-text-secondary text-[11px] truncate leading-snug mt-0.5">
                 {email.subject || '(no subject)'}
               </div>
             </div>
           ))
         )}
       </div>
-      <div className="text-[10px] lowercase text-text-muted">
+      <div className="text-[10px] lowercase tracking-[0.18em] text-text-muted">
         gmail × {status ? status.accounts.length : 3}
       </div>
     </div>

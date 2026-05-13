@@ -11,30 +11,39 @@ const AGENTS = [
   { name: 'monitor', status: 'done' }
 ] as const
 
-const DOT: Record<(typeof AGENTS)[number]['status'], string> = {
-  idle: 'bg-border-active',
-  running: 'bg-accent-cyan animate-pulse',
-  done: 'bg-positive'
+const DOT_CLASS: Record<(typeof AGENTS)[number]['status'], string> = {
+  idle: 'status-dot is-offline',
+  running: 'status-dot is-running',
+  done: 'status-dot is-live'
 }
 
 function TilePreview(): React.JSX.Element {
+  const activeCount = AGENTS.filter((a) => a.status === 'running').length
   return (
     <div className="flex flex-col h-full justify-between p-5">
       <TileHeader
         Icon={Users}
         label="crew"
-        right={<span className="text-[10px] font-mono text-text-secondary">1 active</span>}
+        right={
+          <span className="text-[10px] font-mono text-accent-cyan">
+            {activeCount} <span className="text-text-muted lowercase">active</span>
+          </span>
+        }
       />
       <div className="flex-1 flex flex-col justify-center gap-1.5">
         {AGENTS.map((a) => (
           <div key={a.name} className="flex items-center gap-2 text-xs">
-            <span className={`w-1.5 h-1.5 rounded-full ${DOT[a.status]}`} />
-            <span className="text-text-secondary">{a.name}</span>
-            <span className="text-[10px] lowercase text-text-muted ml-auto">{a.status}</span>
+            <span className={DOT_CLASS[a.status]} />
+            <span className="text-text-secondary lowercase">{a.name}</span>
+            <span className="text-[10px] uppercase tracking-[0.16em] text-text-muted ml-auto">
+              {a.status}
+            </span>
           </div>
         ))}
       </div>
-      <div className="text-[10px] lowercase text-text-muted">5 agents</div>
+      <div className="text-[10px] lowercase tracking-[0.18em] text-text-muted">
+        {AGENTS.length} agents
+      </div>
     </div>
   )
 }

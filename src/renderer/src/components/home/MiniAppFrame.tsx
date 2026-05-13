@@ -96,24 +96,27 @@ export function MiniAppFrame(): React.JSX.Element | null {
 
   return (
     <div
-      className="fixed z-40 rounded-xl overflow-hidden border border-border bg-surface shadow-[0_24px_120px_-16px_rgba(0,0,0,0.7)]"
+      className="fixed z-40 rounded-xl overflow-hidden border border-white/[0.07] bg-surface/95 backdrop-blur-2xl shadow-[0_30px_140px_-20px_rgba(0,0,0,0.85),0_0_0_1px_rgba(34,211,238,0.04)]"
       style={frameStyle}
-      onTransitionEnd={(e) => {
-        // No-op; the timer-driven finishPhase handles state. Keeping this in case we
-        // want to switch to event-driven later.
-        if (e.propertyName !== 'opacity') {
-          // ignore
-        }
-      }}
     >
-      {/* Back button — fixed within the frame */}
+      {/* Inner hairline ring */}
+      <div className="pointer-events-none absolute inset-0 rounded-xl ring-1 ring-inset ring-white/[0.025]" />
+
+      {/* Top-edge accent — a thin RGB pulse line for the JARVIS feel */}
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-px divider-rgb opacity-70" />
+
+      {/* Back button */}
       <button
         onClick={close}
-        className="absolute top-3 left-3 z-50 h-8 w-8 rounded-md bg-surface-elevated/80 backdrop-blur border border-border text-text-secondary hover:text-text-primary hover:border-border-active transition-colors flex items-center justify-center"
+        className="absolute top-3 left-3 z-50 h-8 w-8 rounded-md bg-surface-elevated/70 backdrop-blur border border-border/80 text-text-secondary hover:text-accent-cyan hover:border-accent-cyan/40 transition-all flex items-center justify-center group"
         aria-label="Back"
         title="Back (Esc)"
       >
-        <ArrowLeft size={14} strokeWidth={1.75} />
+        <ArrowLeft
+          size={14}
+          strokeWidth={1.75}
+          className="transition-transform duration-200 group-hover:-translate-x-0.5"
+        />
       </button>
 
       <div

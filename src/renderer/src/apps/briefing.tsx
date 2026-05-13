@@ -17,17 +17,22 @@ function TilePreview(): React.JSX.Element {
       <TileHeader
         Icon={FileText}
         label="briefing"
-        right={<span className="text-[10px] font-mono text-text-muted">{date} · 7:00am</span>}
+        right={
+          <span className="text-[10px] font-mono lowercase text-text-muted">
+            {date} <span className="text-text-muted/60">·</span>{' '}
+            <span className="text-accent-cyan">07:00</span>
+          </span>
+        }
       />
-      <ul className="flex-1 flex flex-col justify-center gap-1.5 text-xs text-text-secondary">
+      <ul className="flex-1 flex flex-col justify-center gap-2 text-xs text-text-secondary">
         {PLACEHOLDER_HEADLINES.map((h, i) => (
-          <li key={i} className="flex gap-2 leading-snug">
-            <span className="text-text-muted">·</span>
+          <li key={i} className="flex items-start gap-2 leading-snug">
+            <span className="mt-1 inline-block h-px w-3 bg-accent-cyan/60 shrink-0" />
             <span>{h}</span>
           </li>
         ))}
       </ul>
-      <div className="text-[10px] lowercase text-text-muted">morning brief</div>
+      <div className="text-[10px] lowercase tracking-[0.18em] text-text-muted">morning brief</div>
     </div>
   )
 }

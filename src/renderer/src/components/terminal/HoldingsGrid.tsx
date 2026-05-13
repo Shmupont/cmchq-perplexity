@@ -58,22 +58,22 @@ export function HoldingsGrid({ rows }: Props): React.JSX.Element {
 
   return (
     <section className="card flex flex-col h-full overflow-hidden">
-      <div className="flex items-center justify-between px-4 py-3 border-b border-border">
-        <div className="text-[10px] uppercase tracking-widest text-text-muted">Holdings</div>
-        <div className="text-[10px] uppercase tracking-wider text-text-muted">
-          {rows.length} positions
-        </div>
+      <div className="card-header">
+        <span className="card-eyebrow">Holdings</span>
+        <span className="text-[10px] uppercase tracking-[0.2em] text-text-muted">
+          <span className="font-mono text-text-secondary">{rows.length}</span> positions
+        </span>
       </div>
       <div className="overflow-auto flex-1">
         <table className="w-full text-sm">
-          <thead className="sticky top-0 bg-surface z-10">
-            <tr className="border-b border-border">
+          <thead className="sticky top-0 z-10 backdrop-blur-md bg-surface/85">
+            <tr className="border-b border-border/80">
               <th className="w-6 px-2 py-2"></th>
               {COLUMNS.map((c) => (
                 <th
                   key={c.key}
                   onClick={() => toggleSort(c.key)}
-                  className={`px-3 py-2 text-[10px] uppercase tracking-wider font-medium cursor-pointer select-none text-text-secondary hover:text-text-primary ${
+                  className={`px-3 py-2 text-[10px] uppercase tracking-[0.16em] font-medium cursor-pointer select-none text-text-muted hover:text-accent-cyan transition-colors ${
                     c.align === 'right' ? 'text-right' : 'text-left'
                   }`}
                 >
@@ -88,21 +88,23 @@ export function HoldingsGrid({ rows }: Props): React.JSX.Element {
             </tr>
           </thead>
           <tbody>
-            {sorted.map((r) => (
+            {sorted.map((r, i) => (
               <tr
                 key={r.ticker}
                 onClick={() => !r.is_cash && openDrawer({ kind: 'chart', ticker: r.ticker })}
-                className={`border-b border-border/60 transition-colors ${
-                  r.is_cash ? '' : 'hover:bg-surface-elevated cursor-pointer'
-                }`}
+                className={`group border-b border-border/40 transition-colors ${
+                  i % 2 === 1 ? 'bg-white/[0.012]' : ''
+                } ${r.is_cash ? '' : 'hover:bg-accent-cyan/[0.04] cursor-pointer'}`}
               >
                 <td className="px-2 py-2.5">
                   <span
                     title="Signal placeholder — Agent 3 will fill"
-                    className="block w-2 h-2 rounded-full bg-border-active"
+                    className="block w-1.5 h-1.5 rounded-full bg-border-active group-hover:bg-accent-cyan group-hover:shadow-[0_0_6px_rgba(34,211,238,0.7)] transition-all"
                   />
                 </td>
-                <td className="px-3 py-2.5 font-mono text-text-primary">{r.ticker}</td>
+                <td className="px-3 py-2.5 font-mono text-text-primary text-[13px] tracking-wide">
+                  {r.ticker}
+                </td>
                 <td className="px-3 py-2.5 text-text-secondary text-[12px]">{r.name}</td>
                 <td className="px-3 py-2.5 text-right">
                   <Num value={r.shares} decimals={r.shares % 1 === 0 ? 0 : 2} />
@@ -126,8 +128,12 @@ export function HoldingsGrid({ rows }: Props): React.JSX.Element {
             ))}
             {sorted.length === 0 && (
               <tr>
-                <td colSpan={COLUMNS.length + 1} className="px-6 py-10 text-center text-text-muted">
-                  No holdings yet — add some in Settings.
+                <td colSpan={COLUMNS.length + 1} className="px-6 py-12 text-center">
+                  <div className="card-eyebrow mb-2">no positions</div>
+                  <div className="text-sm text-text-secondary">
+                    Add holdings in <span className="text-accent-cyan">Settings</span> to populate
+                    the terminal.
+                  </div>
                 </td>
               </tr>
             )}
