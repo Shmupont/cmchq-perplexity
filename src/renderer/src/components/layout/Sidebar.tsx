@@ -8,6 +8,7 @@ type NavItem = {
 }
 
 const ITEMS: NavItem[] = [
+  { id: 'home', label: 'Home', icon: '🏠' },
   { id: 'brain', label: 'Brain', icon: '🧠' },
   { id: 'terminal', label: 'Terminal', icon: '📊' },
   { id: 'inbox', label: 'Inbox', icon: '📧' },

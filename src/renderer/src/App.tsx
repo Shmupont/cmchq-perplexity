@@ -1,6 +1,7 @@
 import { Sidebar } from '@components/layout/Sidebar'
 import { TopBar } from '@components/layout/TopBar'
 import { RightDrawer } from '@components/layout/RightDrawer'
+import { Home } from '@pages/Home'
 import { Terminal } from '@pages/Terminal'
 import { Settings } from '@pages/Settings'
 import { ComingSoon } from '@pages/ComingSoon'
@@ -11,6 +12,9 @@ function App(): React.JSX.Element {
 
   let body: React.ReactNode = null
   switch (page) {
+    case 'home':
+      body = <Home />
+      break
     case 'terminal':
       body = <Terminal />
       break
