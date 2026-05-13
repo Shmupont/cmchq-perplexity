@@ -1,7 +1,7 @@
 // Portfolio service. Reads holdings from DB, quotes via yahoo-finance2,
 // caches into price_cache, and builds the renderer-friendly summary.
 
-import YahooFinance from 'yahoo-finance2'
+import YahooFinanceMod from 'yahoo-finance2'
 import { getDb } from './db'
 import type {
   Holding,
@@ -14,10 +14,14 @@ import type {
 } from '../../shared/types'
 import { sectorForTicker } from '../constants'
 
-const yf = new YahooFinance()
+// yahoo-finance2 v3: CJS needs `new (require().default)()`, ESM needs `new (import).default()`
+// electron-vite bundles as CJS, so we handle both shapes
+const YFClass = (YahooFinanceMod as any).default ?? YahooFinanceMod
+const yf = typeof YFClass === 'function' ? new YFClass() : YFClass
 // Silence first-run notices for cleaner logs
 try {
-  yf._notices.suppress(['ripHistorical', 'yahooSurvey'])
+  if (typeof yf.suppressNotices === 'function') yf.suppressNotices(['ripHistorical', 'yahooSurvey'])
+  else if (yf._notices?.suppress) yf._notices.suppress(['ripHistorical', 'yahooSurvey'])
 } catch {
   /* noop */
 }
