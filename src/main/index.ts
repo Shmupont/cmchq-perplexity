@@ -4,6 +4,9 @@ import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
 import { getDb, closeDb } from './services/db'
 import { registerPortfolioIpc } from './ipc/portfolio'
+import { registerAgentsIpc } from './ipc/agents'
+import { registerBriefingIpc } from './ipc/briefing'
+import { registerKeysIpc } from './ipc/keys'
 import { startScheduler, stopScheduler } from './services/scheduler'
 
 function createWindow(): void {
@@ -53,8 +56,11 @@ app.whenReady().then(() => {
 
   // Register IPC handlers
   registerPortfolioIpc()
+  registerAgentsIpc()
+  registerBriefingIpc()
+  registerKeysIpc()
 
-  // Start the background scheduler (market-hours portfolio refresh)
+  // Start the background scheduler (market-hours portfolio refresh + briefings)
   startScheduler()
 
   createWindow()

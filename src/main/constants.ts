@@ -18,7 +18,29 @@ export const IPC = {
   PORTFOLIO_REFRESH: 'portfolio:refresh',
   HOLDINGS_LIST: 'holdings:list',
   HOLDINGS_UPSERT: 'holdings:upsert',
-  HOLDINGS_DELETE: 'holdings:delete'
+  HOLDINGS_DELETE: 'holdings:delete',
+
+  // Keys (API keys, encrypted via safeStorage)
+  KEYS_STATUS: 'keys:status',
+  KEYS_SET: 'keys:set',
+  KEYS_CLEAR: 'keys:clear',
+
+  // Crew (Claude agents)
+  AGENTS_LIST: 'agents:list',
+  AGENTS_RUN: 'agents:run',
+  AGENTS_TASK_HISTORY: 'agents:taskHistory',
+  AGENTS_TASK_RESULT: 'agents:taskResult',
+
+  // Briefing
+  BRIEFING_LATEST: 'briefing:latest',
+  BRIEFING_HISTORY: 'briefing:history',
+  BRIEFING_REGENERATE: 'briefing:regenerate'
+} as const
+
+// Event channels — main → renderer streaming pushes.
+export const EVT = {
+  // Crew streaming, payload includes taskId for fan-out
+  AGENTS_STREAM: 'agents:stream'
 } as const
 
 export const VAULT_DEFAULT_PATH =

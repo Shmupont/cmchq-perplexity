@@ -4,6 +4,8 @@ import { RightDrawer } from '@components/layout/RightDrawer'
 import { Home } from '@pages/Home'
 import { Terminal } from '@pages/Terminal'
 import { Settings } from '@pages/Settings'
+import { Crew } from '@pages/Crew'
+import { Briefing } from '@pages/Briefing'
 import { ComingSoon } from '@pages/ComingSoon'
 import { useAppStore } from '@stores/appStore'
 
@@ -40,22 +42,10 @@ function App(): React.JSX.Element {
       )
       break
     case 'crew':
-      body = (
-        <ComingSoon
-          name="Crew"
-          icon="🤖"
-          tagline="Five Claude agents on standby — Agent 3 builds this next."
-        />
-      )
+      body = <Crew />
       break
     case 'briefing':
-      body = (
-        <ComingSoon
-          name="Briefing"
-          icon="📋"
-          tagline="Daily 7am intelligence brief — Agent 3 builds this next."
-        />
-      )
+      body = <Briefing />
       break
   }
 

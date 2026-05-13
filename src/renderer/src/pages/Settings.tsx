@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import type { Holding } from '../../../shared/types'
 import { Num } from '@components/common/Number'
+import { ApiKeysSection } from '@components/settings/ApiKeysSection'
 
 const ASSET_TYPES = ['stock', 'etf', 'bond_etf', 'cash'] as const
 type AssetType = (typeof ASSET_TYPES)[number]
@@ -84,9 +85,11 @@ export function Settings(): React.JSX.Element {
       <div className="mb-6">
         <h1 className="text-xl font-semibold">Settings</h1>
         <p className="text-sm text-text-secondary mt-1">
-          Portfolio configuration — holdings power the Terminal dashboard.
+          API keys, portfolio holdings, and other configuration.
         </p>
       </div>
+
+      <ApiKeysSection />
 
       <section className="card-elevated p-5 mb-6">
         <div className="text-[10px] uppercase tracking-widest text-text-muted mb-3">
