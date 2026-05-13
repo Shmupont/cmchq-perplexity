@@ -9,6 +9,7 @@ import type {
   CandlePoint,
   Period
 } from '../shared/types'
+import type { BrainGraph } from '../shared/brain-types'
 
 const api = {
   portfolio: {
@@ -29,6 +30,9 @@ const api = {
       asset_type?: string | null
     }): Promise<Holding[]> => ipcRenderer.invoke(IPC.HOLDINGS_UPSERT, input),
     remove: (ticker: string): Promise<Holding[]> => ipcRenderer.invoke(IPC.HOLDINGS_DELETE, ticker)
+  },
+  brain: {
+    getGraph: (force?: boolean): Promise<BrainGraph> => ipcRenderer.invoke(IPC.BRAIN_GRAPH, force)
   }
 }
 

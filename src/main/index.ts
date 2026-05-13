@@ -4,6 +4,7 @@ import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
 import { getDb, closeDb } from './services/db'
 import { registerPortfolioIpc } from './ipc/portfolio'
+import { registerBrainIpc } from './ipc/brain'
 import { startScheduler, stopScheduler } from './services/scheduler'
 
 function createWindow(): void {
@@ -53,6 +54,7 @@ app.whenReady().then(() => {
 
   // Register IPC handlers
   registerPortfolioIpc()
+  registerBrainIpc()
 
   // Start the background scheduler (market-hours portfolio refresh)
   startScheduler()

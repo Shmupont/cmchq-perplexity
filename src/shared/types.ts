@@ -64,3 +64,62 @@ export type CandlePoint = {
 }
 
 export type Period = '1D' | '1W' | '1M' | '3M' | 'YTD' | '1Y'
+
+// Brain types live in shared/brain-types.ts (set up by Agent 1's foundation).
+
+// ---------- Email ----------
+
+export type EmailAccountLabel = 'personal' | 'business' | 'school'
+export type EmailAccountStatus = 'ok' | 'needs_auth' | 'error' | 'never_synced'
+
+export type EmailAccount = {
+  id: number
+  email: string
+  label: EmailAccountLabel
+  last_sync_at: string | null
+  status: EmailAccountStatus
+}
+
+export type EmailRecord = {
+  id: string
+  account_id: number
+  account_email: string
+  account_label: EmailAccountLabel
+  from_address: string | null
+  from_name: string | null
+  subject: string | null
+  snippet: string | null
+  date: string | null
+  is_unread: boolean
+  is_starred: boolean
+  importance_score: number | null
+  importance_reason: string | null
+  thread_id: string | null
+  has_attachment: boolean
+}
+
+export type EmailDetail = EmailRecord & {
+  body_html: string | null
+  body_text: string | null
+}
+
+export type TriageView = {
+  columns: { account: EmailAccount; emails: EmailRecord[] }[]
+}
+
+export type EmailFilters = {
+  account_id?: number
+  unread?: boolean
+  starred?: boolean
+  search?: string
+  limit?: number
+  offset?: number
+}
+
+export type EmailSyncStatus = {
+  syncing: boolean
+  hasAnthropicKey: boolean
+  hasGmailCreds: boolean
+  accounts: EmailAccount[]
+  error: string | null
+}

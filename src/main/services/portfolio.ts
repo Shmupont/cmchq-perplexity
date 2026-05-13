@@ -15,9 +15,11 @@ import type {
 import { sectorForTicker } from '../constants'
 
 // yahoo-finance2 v3: CJS needs `new (require().default)()`, ESM needs `new (import).default()`
-// electron-vite bundles as CJS, so we handle both shapes
+// electron-vite bundles as CJS, so we handle both shapes.
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const YFClass = (YahooFinanceMod as any).default ?? YahooFinanceMod
-const yf = typeof YFClass === 'function' ? new YFClass() : YFClass
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const yf: any = typeof YFClass === 'function' ? new YFClass() : YFClass
 // Silence first-run notices for cleaner logs
 try {
   if (typeof yf.suppressNotices === 'function') yf.suppressNotices(['ripHistorical', 'yahooSurvey'])

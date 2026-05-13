@@ -18,7 +18,34 @@ export const IPC = {
   PORTFOLIO_REFRESH: 'portfolio:refresh',
   HOLDINGS_LIST: 'holdings:list',
   HOLDINGS_UPSERT: 'holdings:upsert',
-  HOLDINGS_DELETE: 'holdings:delete'
+  HOLDINGS_DELETE: 'holdings:delete',
+
+  BRAIN_GRAPH: 'brain:graph',
+  BRAIN_NOTE: 'brain:note',
+  BRAIN_SEARCH: 'brain:search',
+  BRAIN_CHAT: 'brain:chat',
+  BRAIN_CHAT_CANCEL: 'brain:chat:cancel',
+  BRAIN_STATS: 'brain:stats',
+  BRAIN_REINDEX: 'brain:reindex',
+  BRAIN_STATUS: 'brain:status',
+
+  EMAIL_TRIAGE: 'email:triage',
+  EMAIL_LIST: 'email:list',
+  EMAIL_DETAIL: 'email:detail',
+  EMAIL_MARK_READ: 'email:markRead',
+  EMAIL_ACCOUNTS: 'email:accounts',
+  EMAIL_ACCOUNT_ADD: 'email:account:add',
+  EMAIL_ACCOUNT_REMOVE: 'email:account:remove',
+  EMAIL_SYNC: 'email:sync',
+  EMAIL_RETRIAGE: 'email:retriage'
+} as const
+
+// Event channels — main → renderer streaming pushes.
+export const EVT = {
+  BRAIN_CHAT_TOKEN: 'brain:chat:token',
+  BRAIN_INDEX_PROGRESS: 'brain:index:progress',
+  BRAIN_GRAPH_CHANGED: 'brain:graph:changed',
+  EMAIL_SYNC_PROGRESS: 'email:sync:progress'
 } as const
 
 export const VAULT_DEFAULT_PATH =
