@@ -4,6 +4,12 @@ import { create } from 'zustand'
 export type Page = 'home' | 'brain' | 'terminal' | 'inbox' | 'crew' | 'briefing' | 'settings'
 
 // iOS-style mini-app model — App.tsx renders AppGrid + MiniAppFrame off this.
+
+// Sidebar-driven routing (current model wired in App.tsx + Sidebar.tsx).
+export type Page = 'home' | 'brain' | 'terminal' | 'inbox' | 'crew' | 'briefing' | 'settings'
+
+// iOS-style mini-app modal model — scaffolded by Agent 1 in src/renderer/src/apps/*
+// but not yet consumed by App.tsx. Kept here so apps/types.ts compiles.
 export type AppId =
   | 'brain'
   | 'portfolio'
@@ -25,11 +31,17 @@ export type TileRect = {
 type DrawerContent = { kind: 'chart'; ticker: string } | null
 
 type AppState = {
-  // Legacy page-based routing
+// Legacy page-based routing
   page: Page
   setPage: (p: Page) => void
 
   // Mini-app modal (homescreen branch)
+
+// Page-based routing
+  page: Page
+  setPage: (p: Page) => void
+
+  // Mini-app modal state (unused by App.tsx today; preserved for Agent 1's HOMESCREEN.md work)
   openApp: AppId | null
   phase: 'idle' | 'opening' | 'closing'
   originRect: TileRect | null
@@ -37,7 +49,9 @@ type AppState = {
   close: () => void
   finishPhase: () => void
 
-  // Right drawer (used by Terminal's mini chart)
+// Right drawer (used by Terminal's mini chart)
+
+// Right drawer
   drawer: DrawerContent
   openDrawer: (c: NonNullable<DrawerContent>) => void
   closeDrawer: () => void

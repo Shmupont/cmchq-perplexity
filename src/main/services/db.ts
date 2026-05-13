@@ -112,6 +112,27 @@ function migrate(d: Database.Database): void {
       is_read INTEGER DEFAULT 0,
       created_at TEXT DEFAULT CURRENT_TIMESTAMP
     );
+
+    -- WSJ / news feed (mini-apps branch)
+    CREATE TABLE IF NOT EXISTS news_items (
+      id TEXT PRIMARY KEY,
+      source TEXT NOT NULL,
+      title TEXT NOT NULL,
+      link TEXT NOT NULL,
+      description TEXT,
+      summary TEXT,
+      published_at TEXT,
+      fetched_at TEXT DEFAULT CURRENT_TIMESTAMP
+    );
+    CREATE INDEX IF NOT EXISTS idx_news_published ON news_items(published_at DESC);
+
+    -- Jarvis chat history (mini-apps branch)
+    CREATE TABLE IF NOT EXISTS jarvis_messages (
+      id INTEGER PRIMARY KEY,
+      role TEXT NOT NULL,
+      content TEXT NOT NULL,
+      created_at TEXT DEFAULT CURRENT_TIMESTAMP
+    );
   `)
 
   // Defensive: add new columns to holdings if upgrading from older schema.

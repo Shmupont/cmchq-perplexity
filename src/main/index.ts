@@ -5,6 +5,10 @@ import icon from '../../resources/icon.png?asset'
 import { getDb, closeDb } from './services/db'
 import { registerPortfolioIpc } from './ipc/portfolio'
 import { registerBrainIpc } from './ipc/brain'
+
+import { registerAgentsIpc } from './ipc/agents'
+import { registerBriefingIpc } from './ipc/briefing'
+import { registerKeysIpc } from './ipc/keys'
 import { startScheduler, stopScheduler } from './services/scheduler'
 
 function createWindow(): void {
@@ -54,9 +58,13 @@ app.whenReady().then(() => {
 
   // Register IPC handlers
   registerPortfolioIpc()
-  registerBrainIpc()
+registerBrainIpc()
 
-  // Start the background scheduler (market-hours portfolio refresh)
+registerAgentsIpc()
+  registerBriefingIpc()
+  registerKeysIpc()
+
+  // Start the background scheduler (market-hours portfolio refresh + briefings)
   startScheduler()
 
   createWindow()

@@ -20,7 +20,7 @@ export const IPC = {
   HOLDINGS_UPSERT: 'holdings:upsert',
   HOLDINGS_DELETE: 'holdings:delete',
 
-  BRAIN_GRAPH: 'brain:graph',
+BRAIN_GRAPH: 'brain:graph',
   BRAIN_NOTE: 'brain:note',
   BRAIN_SEARCH: 'brain:search',
   BRAIN_CHAT: 'brain:chat',
@@ -38,14 +38,33 @@ export const IPC = {
   EMAIL_ACCOUNT_REMOVE: 'email:account:remove',
   EMAIL_SYNC: 'email:sync',
   EMAIL_RETRIAGE: 'email:retriage'
+
+// Keys (API keys, encrypted via safeStorage)
+  KEYS_STATUS: 'keys:status',
+  KEYS_SET: 'keys:set',
+  KEYS_CLEAR: 'keys:clear',
+
+  // Crew (Claude agents)
+  AGENTS_LIST: 'agents:list',
+  AGENTS_RUN: 'agents:run',
+  AGENTS_TASK_HISTORY: 'agents:taskHistory',
+  AGENTS_TASK_RESULT: 'agents:taskResult',
+
+  // Briefing
+  BRIEFING_LATEST: 'briefing:latest',
+  BRIEFING_HISTORY: 'briefing:history',
+  BRIEFING_REGENERATE: 'briefing:regenerate'
 } as const
 
 // Event channels — main → renderer streaming pushes.
 export const EVT = {
-  BRAIN_CHAT_TOKEN: 'brain:chat:token',
+BRAIN_CHAT_TOKEN: 'brain:chat:token',
   BRAIN_INDEX_PROGRESS: 'brain:index:progress',
   BRAIN_GRAPH_CHANGED: 'brain:graph:changed',
   EMAIL_SYNC_PROGRESS: 'email:sync:progress'
+
+// Crew streaming, payload includes taskId for fan-out
+  AGENTS_STREAM: 'agents:stream'
 } as const
 
 export const VAULT_DEFAULT_PATH =
