@@ -37,6 +37,7 @@ BRAIN_GRAPH: 'brain:graph',
   EMAIL_ACCOUNT_ADD: 'email:account:add',
   EMAIL_ACCOUNT_REMOVE: 'email:account:remove',
   EMAIL_SYNC: 'email:sync',
+  EMAIL_STATUS: 'email:status',
   EMAIL_RETRIAGE: 'email:retriage'
 
 // Keys (API keys, encrypted via safeStorage)

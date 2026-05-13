@@ -7,9 +7,27 @@ import type {
   MacroChip,
   Holding,
   CandlePoint,
-  Period
+  Period,
+  TriageView,
+  EmailRecord,
+  EmailDetail,
+  EmailFilters,
+  EmailAccount,
+  EmailAccountLabel,
+  EmailSyncStatus
 } from '../shared/types'
-import type { BrainGraph } from '../shared/brain-types'
+import type {
+  BrainGraph,
+  NoteDetail,
+  BrainSearchHit,
+  VaultStats,
+  BrainStatus,
+  BrainChatMessage,
+  BrainChatModel,
+  BrainChatStreamEvent
+} from '../shared/brain-types'
+
+type Unsubscribe = () => void
 
 import type {
   AgentId,
@@ -75,6 +93,68 @@ agents: {
       ipcRenderer.invoke(IPC.KEYS_SET, name, value),
     clear: (name: KeyName): Promise<Record<KeyName, boolean>> =>
       ipcRenderer.invoke(IPC.KEYS_CLEAR, name)
+
+brain: {
+    getGraph: (force?: boolean): Promise<BrainGraph> =>
+      ipcRenderer.invoke(IPC.BRAIN_GRAPH, force),
+    getNote: (id: string): Promise<NoteDetail | null> => ipcRenderer.invoke(IPC.BRAIN_NOTE, id),
+    search: (query: string, limit?: number): Promise<BrainSearchHit[]> =>
+      ipcRenderer.invoke(IPC.BRAIN_SEARCH, query, limit),
+    chat: (input: {
+      id: string
+      messages: BrainChatMessage[]
+      model: BrainChatModel
+    }): Promise<{ started: true }> => ipcRenderer.invoke(IPC.BRAIN_CHAT, input),
+    cancelChat: (id: string): Promise<{ cancelled: true }> =>
+      ipcRenderer.invoke(IPC.BRAIN_CHAT_CANCEL, id),
+    stats: (): Promise<VaultStats> => ipcRenderer.invoke(IPC.BRAIN_STATS),
+    status: (): Promise<BrainStatus> => ipcRenderer.invoke(IPC.BRAIN_STATUS),
+    reindex: (): Promise<{ started: true }> => ipcRenderer.invoke(IPC.BRAIN_REINDEX),
+    onChatEvent: (cb: (ev: BrainChatStreamEvent) => void): Unsubscribe => {
+      const listener = (_: unknown, ev: BrainChatStreamEvent): void => cb(ev)
+      ipcRenderer.on(EVT.BRAIN_CHAT_TOKEN, listener)
+      return () => ipcRenderer.removeListener(EVT.BRAIN_CHAT_TOKEN, listener)
+    },
+    onIndexProgress: (cb: (p: { done: number; total: number }) => void): Unsubscribe => {
+      const listener = (_: unknown, p: { done: number; total: number }): void => cb(p)
+      ipcRenderer.on(EVT.BRAIN_INDEX_PROGRESS, listener)
+      return () => ipcRenderer.removeListener(EVT.BRAIN_INDEX_PROGRESS, listener)
+    },
+    onGraphChanged: (cb: (p: { total: number }) => void): Unsubscribe => {
+      const listener = (_: unknown, p: { total: number }): void => cb(p)
+      ipcRenderer.on(EVT.BRAIN_GRAPH_CHANGED, listener)
+      return () => ipcRenderer.removeListener(EVT.BRAIN_GRAPH_CHANGED, listener)
+    }
+  },
+  email: {
+    triage: (): Promise<TriageView> => ipcRenderer.invoke(IPC.EMAIL_TRIAGE),
+    list: (filters: EmailFilters): Promise<EmailRecord[]> =>
+      ipcRenderer.invoke(IPC.EMAIL_LIST, filters),
+    detail: (id: string, accountId: number): Promise<EmailDetail | null> =>
+      ipcRenderer.invoke(IPC.EMAIL_DETAIL, id, accountId),
+    markRead: (id: string, accountId: number): Promise<{ ok: true }> =>
+      ipcRenderer.invoke(IPC.EMAIL_MARK_READ, id, accountId),
+    accounts: (): Promise<EmailAccount[]> => ipcRenderer.invoke(IPC.EMAIL_ACCOUNTS),
+    addAccount: (
+      input:
+        | { kind: 'oauth'; label: EmailAccountLabel }
+        | { kind: 'token'; email: string; label: EmailAccountLabel; refresh_token: string }
+    ): Promise<EmailAccount[]> => ipcRenderer.invoke(IPC.EMAIL_ACCOUNT_ADD, input),
+    removeAccount: (id: number): Promise<EmailAccount[]> =>
+      ipcRenderer.invoke(IPC.EMAIL_ACCOUNT_REMOVE, id),
+    sync: (): Promise<EmailSyncStatus> => ipcRenderer.invoke(IPC.EMAIL_SYNC),
+    retriage: (): Promise<{ started: true }> => ipcRenderer.invoke(IPC.EMAIL_RETRIAGE),
+    status: (): Promise<EmailSyncStatus> => ipcRenderer.invoke(IPC.EMAIL_STATUS),
+    onSyncProgress: (
+      cb: (p: { account: string; done: number; total: number }) => void
+    ): Unsubscribe => {
+      const listener = (
+        _: unknown,
+        p: { account: string; done: number; total: number }
+      ): void => cb(p)
+      ipcRenderer.on(EVT.EMAIL_SYNC_PROGRESS, listener)
+      return () => ipcRenderer.removeListener(EVT.EMAIL_SYNC_PROGRESS, listener)
+    }
   }
 }
 

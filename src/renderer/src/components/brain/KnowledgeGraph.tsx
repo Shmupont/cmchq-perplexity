@@ -1,8 +1,10 @@
 // Real Obsidian vault graph rendered with @antv/g6 force-directed layout.
-// Used as both the brain tile preview (compact, non-interactive) and the
-// full Brain mini-app (interactive, with labels).
+// Modes:
+//   - ambient (default): drift, no controls, used as homescreen brain hero
+//   - interactive + showLabels: full Brain page — click nodes to select,
+//     highlightQuery filters/dims non-matching nodes.
 
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { Graph } from '@antv/g6'
 import type { BrainGraph, BrainNodeType } from '../../../../shared/brain-types'
 import { BrainConstellation } from '@components/home/BrainConstellation'
@@ -14,81 +16,107 @@ const NODE_COLOR: Record<BrainNodeType, string> = {
   topic: '#a855f7',
   document: '#64748b',
   contact: '#22d3ee',
-  note: '#64748b'
+  note: '#94a3b8'
 }
 
 type Props = {
   interactive?: boolean
   showLabels?: boolean
-  ambient?: boolean // gentle drift/rotation; true for tile preview
+  ambient?: boolean
+  highlightQuery?: string
+  selectedId?: string | null
+  onSelectNode?: (id: string | null) => void
 }
 
 export function KnowledgeGraph({
   interactive = false,
   showLabels = false,
-  ambient = true
+  ambient = true,
+  highlightQuery = '',
+  selectedId = null,
+  onSelectNode
 }: Props): React.JSX.Element {
   const containerRef = useRef<HTMLDivElement | null>(null)
   const graphRef = useRef<Graph | null>(null)
+  const onSelectRef = useRef(onSelectNode)
+  onSelectRef.current = onSelectNode
+
   const [data, setData] = useState<BrainGraph | null>(null)
   const [loading, setLoading] = useState(true)
 
-  // Fetch the graph from the vault parser
+  // Fetch graph + subscribe to vault changes
   useEffect(() => {
     let cancelled = false
-    window.api.brain
-      .getGraph()
-      .then((g) => {
-        if (!cancelled) setData(g)
-      })
-      .catch((err) => console.error('[KnowledgeGraph] fetch failed:', err))
-      .finally(() => !cancelled && setLoading(false))
+    const fetch = (force = false): void => {
+      window.api.brain
+        .getGraph(force)
+        .then((g) => {
+          if (!cancelled) setData(g)
+        })
+        .catch((err) => console.error('[KnowledgeGraph] fetch failed:', err))
+        .finally(() => !cancelled && setLoading(false))
+    }
+    fetch()
+    const off = window.api.brain.onGraphChanged(() => fetch(true))
     return () => {
       cancelled = true
+      off()
     }
   }, [])
 
-  // Build graph instance once data lands
-  useEffect(() => {
-    const el = containerRef.current
-    if (!el || !data || !data.hasVault || data.nodes.length === 0) return
-
-    const minLinks = 0
+  // Compute node/edge data each render — cheap, used by both create + restyle paths
+  const renderData = useMemo(() => {
+    if (!data) return null
     const maxLinks = data.nodes.reduce((m, n) => Math.max(m, n.linkCount), 1)
-
+    const q = highlightQuery.trim().toLowerCase()
+    const matches = (title: string, id: string): boolean =>
+      !q || title.toLowerCase().includes(q) || id.toLowerCase().includes(q)
     const nodeData = data.nodes.map((n) => {
-      const t = (NODE_COLOR[n.type] ?? NODE_COLOR.note) as string
-      const norm = maxLinks > minLinks ? (n.linkCount - minLinks) / (maxLinks - minLinks) : 0
+      const baseColor = NODE_COLOR[n.type] ?? NODE_COLOR.note
+      const norm = maxLinks > 0 ? n.linkCount / maxLinks : 0
       const size = 6 + norm * 28
+      const matched = matches(n.title, n.id)
+      const isSelected = selectedId === n.id
       return {
         id: n.id,
         data: { title: n.title, type: n.type, area: n.area, links: n.linkCount },
         style: {
-          fill: t,
-          stroke: t,
-          fillOpacity: 0.85,
-          lineWidth: 0,
-          size,
-          labelText: showLabels ? n.title : undefined,
-          labelFill: '#94a3b8',
+          fill: baseColor,
+          stroke: isSelected ? '#22d3ee' : baseColor,
+          fillOpacity: matched ? 0.9 : 0.18,
+          lineWidth: isSelected ? 2 : 0,
+          size: isSelected ? size + 4 : size,
+          labelText: showLabels && (matched || isSelected) ? n.title : undefined,
+          labelFill: matched ? '#cbd5e1' : '#475569',
           labelFontSize: 10,
           labelOffsetY: 6,
           labelPlacement: 'bottom' as const
         }
       }
     })
-
     const edgeData = data.edges.map((e) => ({
       source: e.source,
       target: e.target,
-      style: { stroke: '#1a2a3a', strokeOpacity: 0.5, lineWidth: 0.6 }
+      style: {
+        stroke: '#1a2a3a',
+        strokeOpacity: q ? 0.18 : 0.5,
+        lineWidth: 0.6
+      }
     }))
+    return { nodes: nodeData, edges: edgeData }
+  }, [data, highlightQuery, selectedId, showLabels])
+
+  // Create graph once data is ready
+  useEffect(() => {
+    const el = containerRef.current
+    if (!el || !data || !data.hasVault || data.nodes.length === 0 || !renderData) return
+    if (graphRef.current) return // already created — restyle effect handles updates
 
     const graph = new Graph({
       container: el,
       width: el.clientWidth,
       height: el.clientHeight,
-      data: { nodes: nodeData, edges: edgeData },
+      data: renderData,
       autoFit: 'view',
       background: 'transparent',
       layout: {
@@ -104,13 +132,24 @@ export function KnowledgeGraph({
       behaviors: interactive ? ['drag-canvas', 'zoom-canvas', 'drag-element'] : []
     })
 
+    if (interactive) {
+      graph.on('node:click', (evt: { target?: { id?: string } }) => {
+        const id = evt?.target?.id
+        if (typeof id === 'string') onSelectRef.current?.(id)
+      })
+      graph.on('canvas:click', () => onSelectRef.current?.(null))
+    }
+
     graphRef.current = graph
     graph.render().catch((err) => console.error('[KnowledgeGraph] render failed:', err))
 
     const ro = new ResizeObserver(() => {
-      if (containerRef.current) {
-        graph.setSize(containerRef.current.clientWidth, containerRef.current.clientHeight)
-        graph.fitView()
+      if (containerRef.current && graphRef.current) {
+        graphRef.current.setSize(
+          containerRef.current.clientWidth,
+          containerRef.current.clientHeight
+        )
+        graphRef.current.fitView()
       }
     })
     ro.observe(el)
@@ -123,7 +162,21 @@ export function KnowledgeGraph({
       }
       graphRef.current = null
     }
-  }, [data, interactive, showLabels, ambient])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data?.hasVault, data?.scannedAt, interactive, ambient])
+
+  // Apply style updates without recreating the graph (cheap)
+  useEffect(() => {
+    if (!graphRef.current || !renderData) return
+    try {
+      graphRef.current.setData(renderData)
+      graphRef.current.render().catch((err) =>
+        console.error('[KnowledgeGraph] restyle render:', err)
+      )
+    } catch (err) {
+      console.error('[KnowledgeGraph] restyle:', err)
+    }
+  }, [renderData])
 
   if (loading) {
     return (
@@ -139,7 +192,6 @@ export function KnowledgeGraph({
   }
 
   if (!data || !data.hasVault) {
-    // Graceful fallback when vault is missing (e.g. running outside Coleman's box)
     return (
       <div className="relative w-full h-full overflow-hidden">
         <BrainConstellation />
@@ -154,7 +206,7 @@ export function KnowledgeGraph({
     <div className="relative w-full h-full overflow-hidden rounded-[inherit]">
       <div ref={containerRef} className="w-full h-full" />
       <div className="absolute bottom-3 right-4 text-[10px] lowercase tracking-widest text-text-muted z-10 pointer-events-none">
-        {data.noteCount} nodes
+        {data.noteCount} nodes · {data.edges.length} edges
       </div>
     </div>
   )

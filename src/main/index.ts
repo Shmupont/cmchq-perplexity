@@ -5,10 +5,13 @@ import icon from '../../resources/icon.png?asset'
 import { getDb, closeDb } from './services/db'
 import { registerPortfolioIpc } from './ipc/portfolio'
 import { registerBrainIpc } from './ipc/brain'
-
 import { registerAgentsIpc } from './ipc/agents'
 import { registerBriefingIpc } from './ipc/briefing'
 import { registerKeysIpc } from './ipc/keys'
+
+import { registerEmailIpc } from './ipc/email'
+import { initBrain, stopVaultWatcher } from './services/brain'
+import { initEmail, stopEmailSync } from './services/email'
 import { startScheduler, stopScheduler } from './services/scheduler'
 
 function createWindow(): void {
@@ -65,7 +68,14 @@ registerAgentsIpc()
   registerKeysIpc()
 
   // Start the background scheduler (market-hours portfolio refresh + briefings)
+
+registerBrainIpc()
+  registerEmailIpc()
+
+  // Background services
   startScheduler()
+  initBrain()
+  initEmail()
 
   createWindow()
 
@@ -82,5 +92,7 @@ app.on('window-all-closed', () => {
 
 app.on('before-quit', () => {
   stopScheduler()
+  stopVaultWatcher()
+  stopEmailSync()
   closeDb()
 })
