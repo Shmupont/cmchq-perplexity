@@ -1,0 +1,111 @@
+// Initial portfolio seed (PORTFOLIO_SEED.json embedded for runtime use).
+// Used on first launch when holdings table is empty.
+
+export type SeedHolding = {
+  ticker: string
+  description: string
+  asset_type: 'stock' | 'etf' | 'bond_etf' | 'cash'
+  quantity: number
+  cost_basis_per_share: number
+}
+
+export const PORTFOLIO_SEED: SeedHolding[] = [
+  {
+    ticker: 'GOOGL',
+    description: 'Alphabet Inc Shs Cl A',
+    asset_type: 'stock',
+    quantity: 33,
+    cost_basis_per_share: 257.576
+  },
+  {
+    ticker: 'AAPL',
+    description: 'Apple Inc',
+    asset_type: 'stock',
+    quantity: 35,
+    cost_basis_per_share: 242.857
+  },
+  {
+    ticker: 'SHV',
+    description: 'iShares 0-1 Yr Treasury Bond ETF',
+    asset_type: 'bond_etf',
+    quantity: 100,
+    cost_basis_per_share: 109.995
+  },
+  {
+    ticker: 'IBB',
+    description: 'iShares Biotechnology ETF',
+    asset_type: 'etf',
+    quantity: 10,
+    cost_basis_per_share: 144.258
+  },
+  {
+    ticker: 'XLF',
+    description: 'Financial Select Sector SPDR ETF',
+    asset_type: 'etf',
+    quantity: 150,
+    cost_basis_per_share: 37.609
+  },
+  {
+    ticker: 'XLV',
+    description: 'Health Care Select Sector SPDR ETF',
+    asset_type: 'etf',
+    quantity: 46,
+    cost_basis_per_share: 119.443
+  },
+  {
+    ticker: 'XLY',
+    description: 'Consumer Discret Select Sector SPDR ETF',
+    asset_type: 'etf',
+    quantity: 40,
+    cost_basis_per_share: 85.008
+  },
+  {
+    ticker: 'VDC',
+    description: 'Vanguard Consumer Staples ETF',
+    asset_type: 'etf',
+    quantity: 30,
+    cost_basis_per_share: 180.471
+  },
+  {
+    ticker: 'VDE',
+    description: 'Vanguard Energy ETF',
+    asset_type: 'etf',
+    quantity: 31,
+    cost_basis_per_share: 87.418
+  },
+  {
+    ticker: 'VIS',
+    description: 'Vanguard Industrial ETF',
+    asset_type: 'etf',
+    quantity: 20,
+    cost_basis_per_share: 186.98
+  },
+  {
+    ticker: 'VGT',
+    description: 'Vanguard Information Technology ETF',
+    asset_type: 'etf',
+    quantity: 20,
+    cost_basis_per_share: 375.36
+  },
+  {
+    ticker: 'VNQ',
+    description: 'Vanguard Real Estate ETF',
+    asset_type: 'etf',
+    quantity: 146.7128,
+    cost_basis_per_share: 85.648
+  },
+  {
+    ticker: 'VPU',
+    description: 'Vanguard Utilities ETF',
+    asset_type: 'etf',
+    quantity: 16,
+    cost_basis_per_share: 142.233
+  },
+  {
+    ticker: 'CASH',
+    description: 'ML Bank Deposit Program',
+    asset_type: 'cash',
+    quantity: 13656,
+    cost_basis_per_share: 1.0
+  }
+]

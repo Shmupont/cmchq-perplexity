@@ -1,0 +1,109 @@
+@import '@fontsource-variable/inter/index.css';
+@import '@fontsource-variable/jetbrains-mono/index.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: dark;
+  }
+
+  html,
+  body,
+  #root {
+    @apply h-full bg-bg text-text-primary;
+  }
+
+  body {
+    @apply font-sans antialiased;
+    font-feature-settings: 'cv11', 'ss01', 'ss03';
+    -webkit-font-smoothing: antialiased;
+    overflow: hidden;
+  }
+
+  .num,
+  td.num,
+  .tabular-mono {
+    @apply font-mono tabular-nums;
+  }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    @apply bg-border rounded;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-border-active;
+  }
+}
+
+@layer components {
+  .card {
+    @apply rounded-md border border-border bg-surface bg-carbon transition-colors;
+  }
+  .card:hover {
+    @apply border-border-active;
+  }
+  .card-elevated {
+    @apply rounded-md border border-border bg-surface-elevated bg-carbon;
+  }
+  .card-flat {
+    @apply rounded-md border border-border bg-surface;
+  }
+  .divider-rgb {
+    background-image: linear-gradient(
+      90deg,
+      transparent,
+      #3b82f6 20%,
+      #22d3ee 50%,
+      #a855f7 80%,
+      transparent
+    );
+    height: 1px;
+    opacity: 0.4;
+  }
+  .titlebar {
+    -webkit-app-region: drag;
+  }
+  .titlebar-no-drag {
+    -webkit-app-region: no-drag;
+  }
+  .pos {
+    @apply text-positive;
+  }
+  .neg {
+    @apply text-negative;
+  }
+  .glow-active {
+    box-shadow:
+      inset 0 0 0 1px #2a4060,
+      0 0 24px -8px rgba(34, 211, 238, 0.5);
+  }
+  .input {
+    @apply h-9 px-3 rounded-md bg-surface border border-border text-sm text-text-primary placeholder:text-text-muted outline-none transition-colors;
+  }
+  .input:focus {
+    @apply border-accent-blue;
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(2px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.page-enter {
+  animation: fade-in 200ms ease-out;
+}

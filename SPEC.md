@@ -371,6 +371,7 @@ Fed minutes at 2pm ET — watch for rate guidance
 
 ### Sidebar Navigation (left, collapsed by default — icons only)
 ```
+🏠  Home
 🧠  Brain
 📊  Terminal
 📧  Inbox
@@ -378,6 +379,19 @@ Fed minutes at 2pm ET — watch for rate guidance
 📋  Briefing
 ⚙️  Settings
 ```
+
+### Home Page (default landing)
+The first thing Coleman sees when the app opens. NOT a blank dashboard — a living cockpit.
+
+**Layout:**
+- **Top half:** Interactive Obsidian brain graph (same renderer as Brain page, but zoomed out, auto-rotating slowly, ambient glow). Click any node → navigates to Brain page with that note selected.
+- **Bottom half:** 3-column quick glance:
+  - Left: Portfolio summary (total value, daily P&L, top 3 movers)
+  - Center: Today's briefing (condensed — 5 bullet max)
+  - Right: Email triage (top 1 urgent per account, 3 total)
+- **Ambient vibe:** The graph pulses subtly. Nodes glow brighter for recently modified notes. The whole thing feels alive.
+
+This page is the reason the app exists. It should look like mission control at NASA.
 
 ### Main Panel
 - Full width minus sidebar
