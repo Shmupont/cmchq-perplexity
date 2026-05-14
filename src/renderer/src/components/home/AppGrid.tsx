@@ -9,13 +9,13 @@ export function AppGrid(): React.JSX.Element {
   // Layout: 3-column grid. brain spans 2 cols on row 1, portfolio sits in col 3.
   // The CSS auto-flow places the remaining 1×1 tiles into rows 2 and 3.
   return (
-    <div className="page-enter h-full w-full flex items-center justify-center px-10 py-8 overflow-hidden">
+    <div className="page-enter h-full w-full flex items-center justify-center px-6 py-4 overflow-hidden">
       <div
-        className="grid w-full max-w-[1180px] gap-5"
+        className="grid w-full max-w-[1600px] gap-4"
         style={{
           gridTemplateColumns: 'repeat(3, minmax(0, 1fr))',
-          gridAutoRows: 'minmax(180px, 1fr)',
-          height: 'min(78vh, 720px)'
+          gridAutoRows: 'minmax(200px, 1fr)',
+          height: 'min(92vh, 960px)'
         }}
       >
         {GRID_APPS.map((app, idx) => {

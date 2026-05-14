@@ -105,7 +105,7 @@ export const PORTFOLIO_SEED: SeedHolding[] = [
     ticker: 'CASH',
     description: 'ML Bank Deposit Program',
     asset_type: 'cash',
-    quantity: 13656,
+    quantity: 26000,
     cost_basis_per_share: 1.0
   }
 ]

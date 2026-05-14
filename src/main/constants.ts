@@ -82,7 +82,7 @@ export const EVT = {
 } as const
 
 export const VAULT_DEFAULT_PATH =
-  '~/Library/Mobile Documents/com~apple~CloudDocs/Desktop/obsidian brain'
+  '~/brain-local'
 
 // Sector mapping — used by AllocationDonut. Keep here so Settings page can also use it.
 export const SECTOR_BY_TICKER: Record<string, string> = {
