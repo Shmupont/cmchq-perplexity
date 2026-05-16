@@ -8,9 +8,16 @@ const IMPORTANT = 0.5
 
 function importanceColor(score: number | null): string {
   if (score == null) return 'bg-text-muted'
-  if (score >= URGENT) return 'bg-negative'
-  if (score >= IMPORTANT) return 'bg-warning'
-  return 'bg-accent-blue'
+  if (score >= URGENT) return 'bg-negative shadow-[0_0_8px_rgba(239,68,68,0.7)]'
+  if (score >= IMPORTANT) return 'bg-warning shadow-[0_0_8px_rgba(245,158,11,0.7)]'
+  return 'bg-accent-blue shadow-[0_0_8px_rgba(59,130,246,0.65)]'
+}
+
+function leftEdgeColor(score: number | null): string {
+  if (score == null) return 'rgba(71, 85, 105, 0.4)'
+  if (score >= URGENT) return 'rgba(239, 68, 68, 0.85)'
+  if (score >= IMPORTANT) return 'rgba(245, 158, 11, 0.85)'
+  return 'rgba(59, 130, 246, 0.7)'
 }
 
 function relTime(iso: string | null): string {
@@ -39,21 +46,24 @@ export function EmailCard({ email, onSelect, active }: Props): React.JSX.Element
   return (
     <button
       onClick={() => onSelect(email)}
-      className={`w-full text-left rounded-md border px-3 py-2.5 transition-colors ${
+      style={{ borderLeftColor: leftEdgeColor(email.importance_score) }}
+      className={`relative w-full text-left rounded-md border border-l-2 px-3 py-2.5 transition-all duration-200 ${
         active
-          ? 'bg-surface-elevated border-accent-cyan/50'
-          : 'bg-surface border-border hover:border-border-active hover:bg-surface-elevated'
+          ? 'bg-surface-elevated/80 border-accent-cyan/50 shadow-[0_0_24px_-12px_rgba(34,211,238,0.6)]'
+          : 'bg-surface/60 border-border/80 hover:border-border-active hover:bg-surface-elevated/60'
       }`}
       title={email.importance_reason ?? undefined}
     >
-      <div className="flex items-start gap-2">
+      <div className="flex items-start gap-2.5">
         <span
           className={`mt-1.5 inline-block h-2 w-2 rounded-full shrink-0 ${importanceColor(email.importance_score)}`}
         />
         <div className="flex-1 min-w-0">
           <div className="flex items-baseline justify-between gap-2">
             <span
-              className={`text-sm truncate ${email.is_unread ? 'text-text-primary font-medium' : 'text-text-secondary'}`}
+              className={`text-sm truncate ${
+                email.is_unread ? 'text-text-primary font-medium' : 'text-text-secondary'
+              }`}
             >
               {sender}
             </span>
@@ -61,11 +71,11 @@ export function EmailCard({ email, onSelect, active }: Props): React.JSX.Element
               {relTime(email.date)}
             </span>
           </div>
-          <div className="text-[13px] text-text-primary truncate mt-0.5">
+          <div className="text-[13px] text-text-primary truncate mt-0.5 leading-snug">
             {email.subject || '(no subject)'}
           </div>
           {email.snippet && (
-            <div className="text-[11px] text-text-secondary mt-1 leading-snug line-clamp-2">
+            <div className="text-[11px] text-text-secondary mt-1.5 leading-snug line-clamp-2">
               {email.snippet}
             </div>
           )}

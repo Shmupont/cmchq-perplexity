@@ -68,34 +68,20 @@ export function Inbox(): React.JSX.Element {
   const noAccounts = status && status.accounts.length === 0
 
   return (
-    <div className="flex flex-col h-full">
-      <header className="flex items-center justify-between px-4 py-3 border-b border-border">
+    <div className="flex flex-col h-full page-enter">
+      <header className="flex items-center justify-between px-6 py-4 border-b border-border/70 bg-surface/40 backdrop-blur-xl">
         <div>
-          <div className="text-[10px] uppercase tracking-widest text-text-muted">Inbox</div>
-          <h1 className="text-lg font-medium text-text-primary mt-0.5">
+          <div className="card-eyebrow-accent">Inbox</div>
+          <h1 className="text-lg font-medium text-text-primary mt-1 tracking-tight">
             {mode === 'triage' ? 'Triage · top 3 per account' : 'Full inbox'}
           </h1>
         </div>
         <div className="flex items-center gap-2 text-[11px]">
-          <div className="flex items-center rounded-md border border-border overflow-hidden">
-            <button
-              onClick={() => setMode('triage')}
-              className={`px-3 py-1.5 uppercase tracking-wider transition-colors ${
-                mode === 'triage'
-                  ? 'bg-accent-blue/20 text-accent-blue'
-                  : 'text-text-secondary hover:text-text-primary'
-              }`}
-            >
+          <div className="segmented">
+            <button data-active={mode === 'triage'} onClick={() => setMode('triage')}>
               Triage
             </button>
-            <button
-              onClick={() => setMode('all')}
-              className={`px-3 py-1.5 uppercase tracking-wider transition-colors ${
-                mode === 'all'
-                  ? 'bg-accent-blue/20 text-accent-blue'
-                  : 'text-text-secondary hover:text-text-primary'
-              }`}
-            >
+            <button data-active={mode === 'all'} onClick={() => setMode('all')}>
               All
             </button>
           </div>
@@ -105,14 +91,14 @@ export function Inbox(): React.JSX.Element {
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 placeholder="Search…"
-                className="h-7 w-48 rounded-md bg-surface border border-border px-2 outline-none focus:border-accent-blue transition-colors"
+                className="input h-8 w-48"
               />
               <button
                 onClick={() => setUnreadOnly((v) => !v)}
-                className={`h-7 px-2 rounded border transition-colors ${
+                className={`h-8 px-2.5 rounded-md border transition-all text-[11px] uppercase tracking-[0.16em] ${
                   unreadOnly
-                    ? 'border-accent-cyan text-accent-cyan'
-                    : 'border-border text-text-secondary hover:text-text-primary'
+                    ? 'border-accent-cyan/50 text-accent-cyan bg-accent-cyan/[0.08]'
+                    : 'border-border/80 text-text-secondary hover:text-text-primary hover:border-border-active'
                 }`}
               >
                 Unread
@@ -122,10 +108,16 @@ export function Inbox(): React.JSX.Element {
           <button
             onClick={syncNow}
             disabled={syncing || !status?.hasGmailCreds}
-            className="h-7 px-2 rounded border border-border hover:border-accent-cyan hover:text-accent-cyan disabled:opacity-40 transition-colors"
+            className="btn-ghost disabled:opacity-40"
             title={status?.hasGmailCreds ? '' : 'GMAIL_CLIENT_ID/SECRET not set'}
           >
-            {syncing ? 'syncing…' : 'sync'}
+            {syncing ? (
+              <>
+                <span className="status-dot is-running" /> syncing
+              </>
+            ) : (
+              'sync'
+            )}
           </button>
         </div>
       </header>

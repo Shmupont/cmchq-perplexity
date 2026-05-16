@@ -7,9 +7,13 @@ import { MiniAppFrame } from '@components/home/MiniAppFrame'
 // via MiniAppFrame, animated from the clicked tile's origin rect.
 function App(): React.JSX.Element {
   return (
-    <div className="flex flex-col h-full bg-bg">
+    <div className="flex flex-col h-full bg-bg relative overflow-hidden">
+      {/* Ambient HUD atmosphere — never intercepts input */}
+      <div className="hud-grid" />
+      <div className="hud-overlay" />
+
       <TopBar />
-      <main className="flex-1 min-h-0 relative">
+      <main className="flex-1 min-h-0 relative z-[2]">
         <AppGrid />
         <MiniAppFrame />
       </main>

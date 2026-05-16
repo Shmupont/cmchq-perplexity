@@ -61,32 +61,47 @@ export function Brain(): React.JSX.Element {
   }
 
   return (
-    <div className="flex flex-col h-full">
-      <header className="flex items-center justify-between px-4 py-3 border-b border-border">
+    <div className="flex flex-col h-full page-enter">
+      <header className="relative flex items-center justify-between px-6 py-4 border-b border-border/70 bg-surface/40 backdrop-blur-xl">
         <div>
-          <div className="text-[10px] uppercase tracking-widest text-text-muted">Brain</div>
-          <h1 className="text-lg font-medium text-text-primary mt-0.5">Second memory</h1>
+          <div className="card-eyebrow-accent">Brain</div>
+          <h1 className="text-lg font-medium text-text-primary mt-1 tracking-tight">
+            Second memory
+          </h1>
         </div>
         <div className="flex items-center gap-3 text-[11px]">
           <input
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Search notes…"
-            className="h-8 w-64 rounded-md bg-surface border border-border px-3 outline-none focus:border-accent-blue transition-colors text-text-primary"
+            className="input h-8 w-64"
           />
           {status && (
-            <div className="flex items-center gap-2 text-text-muted">
-              <span title={status.vaultPath}>{status.total} notes</span>
-              <span>·</span>
+            <div className="flex items-center gap-3 text-text-muted">
+              <span title={status.vaultPath} className="flex items-center gap-1.5">
+                <span className="status-dot is-live" />
+                <span className="font-mono text-text-secondary">{status.total}</span>
+                <span>notes</span>
+              </span>
+              <span className="text-border">·</span>
               <span
-                className={
+                className={`flex items-center gap-1.5 ${
                   status.hasOpenAIKey
                     ? status.indexed > 0
                       ? 'text-positive'
                       : 'text-warning'
                     : 'text-text-muted'
-                }
+                }`}
               >
+                <span
+                  className={`status-dot ${
+                    status.hasOpenAIKey
+                      ? status.indexed > 0
+                        ? 'is-live'
+                        : 'is-warning'
+                      : 'is-offline'
+                  }`}
+                />
                 {status.hasOpenAIKey
                   ? status.indexed > 0
                     ? `${status.indexed} indexed`
@@ -96,7 +111,7 @@ export function Brain(): React.JSX.Element {
               <button
                 onClick={reindex}
                 disabled={reindexing || !status.hasOpenAIKey}
-                className="h-7 px-2 rounded border border-border hover:border-accent-cyan hover:text-accent-cyan disabled:opacity-40 transition-colors"
+                className="btn-ghost"
                 title={
                   status.hasOpenAIKey
                     ? 'Re-embed every note (uses OpenAI credits)'
@@ -115,21 +130,31 @@ export function Brain(): React.JSX.Element {
       </header>
 
       {!status?.vaultExists && (
-        <div className="px-4 py-2 text-xs bg-warning/10 border-b border-warning/30 text-warning">
+        <div className="px-6 py-2.5 text-xs bg-warning/10 border-b border-warning/30 text-warning flex items-center gap-2">
+          <span className="status-dot is-warning" />
           Vault not found at <span className="font-mono">{status?.vaultPath}</span>. Set
           OBSIDIAN_VAULT_PATH in <span className="font-mono">.env</span>.
         </div>
       )}
 
       {status && !status.hasAnthropicKey && (
-        <div className="px-4 py-2 text-xs bg-warning/10 border-b border-warning/30 text-warning">
+        <div className="px-6 py-2.5 text-xs bg-warning/10 border-b border-warning/30 text-warning flex items-center gap-2">
+          <span className="status-dot is-warning" />
           ANTHROPIC_API_KEY not set — Brain chat is offline until you add it to{' '}
           <span className="font-mono">.env</span>.
         </div>
       )}
 
-      <div className="flex-1 min-h-0 grid grid-cols-[1fr_400px]">
-        <div className="relative border-r border-border">
+      <div className="flex-1 min-h-0 grid grid-cols-[1fr_420px]">
+        <div className="relative border-r border-border/70">
+          {/* Soft radial glow behind the graph */}
+          <div
+            className="pointer-events-none absolute inset-0"
+            style={{
+              background:
+                'radial-gradient(ellipse 60% 60% at 50% 50%, rgba(59,130,246,0.06), transparent 65%)'
+            }}
+          />
           <KnowledgeGraph
             interactive
             showLabels
@@ -139,19 +164,24 @@ export function Brain(): React.JSX.Element {
             onSelectNode={openNote}
           />
         </div>
-        <aside className="flex flex-col min-h-0 bg-surface/40">
-          <nav className="flex items-center border-b border-border">
+        <aside className="flex flex-col min-h-0 bg-surface/40 backdrop-blur-xl">
+          <nav className="flex items-center border-b border-border/70">
             {(['chat', 'note', 'stats'] as PanelTab[]).map((t) => (
               <button
                 key={t}
                 onClick={() => setTab(t)}
-                className={`flex-1 px-3 py-2.5 text-[11px] uppercase tracking-widest transition-colors ${
-                  tab === t
-                    ? 'text-accent-cyan border-b-2 border-accent-cyan'
-                    : 'text-text-muted hover:text-text-secondary border-b-2 border-transparent'
+                className={`relative flex-1 px-3 py-3 text-[10px] uppercase tracking-[0.22em] transition-colors ${
+                  tab === t ? 'text-accent-cyan' : 'text-text-muted hover:text-text-secondary'
                 }`}
               >
                 {t}
+                <span
+                  className={`absolute bottom-0 left-3 right-3 h-px transition-all ${
+                    tab === t
+                      ? 'bg-gradient-to-r from-transparent via-accent-cyan to-transparent opacity-100'
+                      : 'opacity-0'
+                  }`}
+                />
               </button>
             ))}
           </nav>

@@ -108,12 +108,20 @@ export function MiniChart({ ticker }: Props): React.JSX.Element {
     }
   }, [ticker, period])
 
+  const positive = typeof quote?.day_change === 'number' && quote.day_change > 0
+  const negative = typeof quote?.day_change === 'number' && quote.day_change < 0
+
   return (
-    <div className="flex flex-col gap-3">
+    <div className="flex flex-col gap-4">
       <div>
-        <div className="font-mono text-2xl text-text-primary">{ticker}</div>
-        <div className="flex items-baseline gap-3 mt-1">
-          <Num value={quote?.price ?? null} prefix="$" decimals={2} className="text-lg" />
+        <div className="font-mono text-2xl text-text-primary tracking-wider">{ticker}</div>
+        <div className="flex items-baseline gap-3 mt-1.5">
+          <Num
+            value={quote?.price ?? null}
+            prefix="$"
+            decimals={2}
+            className={`text-xl ${positive ? 'num-glow-pos' : negative ? 'num-glow-neg' : ''}`}
+          />
           <Num
             value={quote?.day_change ?? null}
             prefix="$"
@@ -132,25 +140,21 @@ export function MiniChart({ ticker }: Props): React.JSX.Element {
           />
         </div>
       </div>
-      <div className="flex gap-1 card-flat p-1 w-fit">
+      <div className="segmented w-fit">
         {PERIODS.map((p) => (
-          <button
-            key={p}
-            onClick={() => setPeriod(p)}
-            className={`px-2.5 py-1 text-[11px] rounded transition-colors ${
-              period === p
-                ? 'bg-surface-elevated text-accent-cyan'
-                : 'text-text-secondary hover:text-text-primary'
-            }`}
-          >
+          <button key={p} data-active={period === p} onClick={() => setPeriod(p)}>
             {p}
           </button>
         ))}
       </div>
-      <div ref={containerRef} className="w-full" style={{ height: 240 }}>
-        {loading && (
-          <div className="absolute text-[10px] text-text-muted m-2 animate-pulse">loading…</div>
-        )}
+      <div className="relative rounded-md border border-border/70 bg-surface/40 p-1">
+        <div ref={containerRef} className="w-full" style={{ height: 240 }}>
+          {loading && (
+            <div className="absolute inset-0 flex items-center justify-center text-[10px] uppercase tracking-[0.2em] text-text-muted">
+              <span className="animate-pulse">loading…</span>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   )
